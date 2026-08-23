@@ -6,7 +6,7 @@
 [![Model](https://img.shields.io/badge/model-0.2--0.5B-yellow)](https://huggingface.co/)
 [![Project](https://img.shields.io/badge/project-8%20weeks-6f42c1)](#eight-week-roadmap)
 
-This is `llm-learning-with-wordle` - a research-apprenticeship style teaching repository for 3rd-year engineering students who want to work at frontier AI labs.
+This is `llm-learning-with-wordle` - a research-apprenticeship style teaching repository for engineering students who want to work at frontier AI labs.
 
 You start with a public 0.2B-0.5B model (SmolLM-360M, Qwen2-0.5B, TinyLlama) and progressively teach it to play Wordle near SOTA level, learning LLM training, prompting, search, data generation, SFT, and inference-time scaling along the way.
 
