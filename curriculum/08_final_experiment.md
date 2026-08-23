@@ -26,7 +26,7 @@ Before the final run, write a short preregistration containing:
 - fixed train, validation, test, and challenge splits;
 - strong reference and its information/call budget;
 - primary metric and acceptable confidence interval method;
-- training budget, for example `$300` or a fixed number of GPU-hours;
+- local compute budget, for example 12 hours on a laptop CPU or 2 hours on a consumer GPU, with all runs reproducible locally;
 - inference budgets in tokens, calls, latency, and solver expansions;
 - final system configuration selected using validation only;
 - planned ablations and stopping criteria.
@@ -54,7 +54,7 @@ At minimum, compare:
 7. best inference-scaled system;
 8. strong reference.
 
-Use the same target order and rules. Report solve rate with uncertainty, mean/median guesses, guess distribution, invalid rate, repeated-letter performance, difficulty strata, model calls, tokens, wall time, memory, and estimated cost.
+Use the same target order and rules. Report solve rate with uncertainty, mean/median guesses, guess distribution, invalid rate, repeated-letter performance, difficulty strata, model calls, tokens, wall time, CPU-hours, and peak memory.
 
 ## Core ablations
 
@@ -78,7 +78,7 @@ Add at least one interaction test, such as whether search helps the base and SFT
 - What happens when training or inference compute is halved?
 - Which component is the performance bottleneck?
 - What would you change with ten times the compute?
-- How would batching, caching, reliability, monitoring, and cost change at one million games per day?
+- How would batching, caching, reliability, monitoring, throughput, and local resource use change at one million games per day?
 - Which conclusions plausibly transfer beyond Wordle, and which are environment-specific?
 
 ## Deliverables

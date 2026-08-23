@@ -18,7 +18,7 @@ The project must demonstrate more than the ability to call a pretrained model or
 - combine learned models with deterministic tools and search;
 - reason about generalization, leakage, and failure modes;
 - quantify training and inference compute;
-- make decisions under a fixed budget; and
+- make decisions under fixed local hardware and runtime constraints; and
 - produce a defensible research artifact.
 
 Wordle is the domain, not the intellectual endpoint. The intended learning loop is:
@@ -48,15 +48,15 @@ Starting from a publicly available language model with approximately **200M–50
 
 1. achieves a held-out win rate **within 5 percentage points** of a documented strong reference system;
 2. uses **substantially less inference compute** than that reference under the comparison protocol;
-3. remains within a **$300 total training-and-inference compute budget**;
+3. runs entirely locally on consumer hardware (CPU or a single consumer GPU) without requiring paid cloud compute or API calls;
 4. never exposes the hidden target word to the model or decision policy;
 5. uses frozen, leakage-audited train/validation/test splits;
 6. reports uncertainty, secondary metrics, resource use, and failure analysis; and
 7. is reproducible from committed code, configurations, dependency versions, and documented model/data revisions.
 
-The 5-percentage-point threshold is measured as an absolute difference. If the reference wins 92% of games, the target is at least 87% on the same held-out benchmark. The exact reference, prompt/API settings, target set, allowed-guess list, inference limit, and compute-accounting method must be frozen after the baseline phase and before final-system optimization.
+The 5-percentage-point threshold is measured as an absolute difference. If the reference wins 92% of games, the target is at least 87% on the same held-out benchmark. The exact reference, prompt and inference settings, target set, allowed-guess list, inference limit, and compute-accounting method must be frozen after the baseline phase and before final-system optimization.
 
-“Substantially less inference compute” must be operationalized before the final comparison. At minimum, report model calls, input/output tokens, wall-clock time, and estimated cost per game. When architecture details are available, report approximate FLOPs. A defensible default target is **at most one-quarter of the reference system’s estimated inference cost per game**, while also presenting matched-cost comparisons. If black-box access prevents a credible FLOP estimate, use measured tokens, calls, latency, and price, disclose the limitation, and avoid claiming exact hardware efficiency.
+“Substantially less inference compute” must be operationalized before the final comparison. At minimum, report model calls, input/output tokens, wall-clock time, CPU-hours, and peak memory per game. When architecture details are available, report approximate FLOPs. A defensible default target is **at most one-quarter of the reference system’s measured inference compute per game**, while also presenting matched-compute comparisons. Use measured tokens, calls, latency, memory, and optional GPU-hours; disclose measurement limitations and avoid claiming exact hardware efficiency when the evidence does not support it.
 
 The challenge is intentionally method-agnostic. The student must determine whether the strongest approach is prompting, better data, supervised fine-tuning, a deterministic constraint solver, candidate reranking, a verifier, search, inference-time scaling, optional reinforcement learning, or a justified combination.
 
@@ -162,7 +162,7 @@ optional RL or policy optimization
 best system + ablations
 ```
 
-The student may change course when evidence supports doing so. Every major experiment should begin with a written hypothesis, success criterion, estimated cost, and stopping rule.
+The student may change course when evidence supports doing so. Every major experiment should begin with a written hypothesis, success criterion, estimated local runtime and memory use, and stopping rule.
 
 ### 6.1 Required baselines
 
@@ -184,7 +184,7 @@ small base model → prompted model → hybrid/trained systems → strong refere
 
 Compare several pre-specified representations and instructions, not a single hand-tuned prompt. Potential factors include raw history, explicit green/yellow/gray constraints, remaining candidates, scratch space, information-gain instructions, few-shot examples, and constrained output formatting.
 
-Prompt experiments must report token cost, invalid-output handling, and the number of prompt variants tried. Choosing the best prompt on the test set is prohibited.
+Prompt experiments must report token count, invalid-output handling, and the number of prompt variants tried. Choosing the best prompt on the test set is prohibited.
 
 ### 6.3 Model versus external reasoning
 
@@ -231,7 +231,7 @@ Measure whether more inference computation improves the small model. Candidate m
 - Monte Carlo-style rollout estimates; and
 - multiple model calls with fixed roles.
 
-The output must include performance-versus-compute curves, not only the best point. Report diminishing returns and compare against a larger model at matched cost.
+The output must include performance-versus-compute curves, not only the best point. Report diminishing returns and compare against a larger locally runnable model at matched compute.
 
 ### 6.7 Optional reinforcement learning
 
@@ -261,7 +261,7 @@ The final report must answer, with evidence, as many of the following as the imp
 - How much does exact candidate filtering help?
 - Which errors remain after constraint tracking is externalized?
 - Does search improve planning, or simply provide more chances to sample a valid word?
-- At equal inference cost, is a small model plus search better than a larger direct model?
+- At equal inference compute, is a small model plus search better than a larger direct model?
 
 ### Training data and SFT
 
@@ -323,8 +323,8 @@ Report, as applicable:
 - model calls and input/output tokens per game;
 - approximate inference FLOPs when defensible;
 - end-to-end and model-only latency;
-- cost per game and estimated throughput; and
-- training cost, tokens, accelerator-hours, and peak memory.
+- local runtime per game and estimated throughput; and
+- training wall-clock time, CPU-hours, tokens, optional local GPU-hours, and peak memory.
 
 ### 9.3 Statistical practice
 
@@ -338,30 +338,30 @@ Report, as applicable:
 
 The reference system must receive the same observable game state and must not receive the hidden target. Document its model/version, prompt, tools, decoding settings, retries, rate limits, and measurement method. If the reference uses a deterministic solver or search, disclose that fact and compare against both the full system and any available components.
 
-## 10. Compute constraint
+## 10. Compute constraint — Local Execution
 
-The project may spend at most **$300** on training and inference. The budget includes paid accelerator time, hosted inference/API charges, and substantial paid data generation. Free local CPU work should still be timed; local GPU use should be reported in hardware-hours and, where practical, an equivalent cloud-cost estimate.
+The complete project must run locally on the student's laptop or another consumer machine. Paid cloud accelerators, hosted model APIs, paid inference services, and remote data-generation services are not permitted. Every model used by the student system must contain fewer than **1 billion parameters** and must be runnable with less than **16 GB of system RAM**. A single consumer GPU may be used when available, but every required workflow must also provide a documented CPU fallback.
 
-Maintain an append-only ledger containing:
+Maintain an append-only local-compute ledger containing:
 
 - date and experiment ID;
-- provider or local hardware;
-- accelerator type and count;
-- wall-clock duration;
-- measured or estimated charge;
-- training/inference token counts;
+- CPU model, logical/physical core count, and number of cores used;
+- GPU model and VRAM, when a local GPU is used;
+- wall-clock duration and CPU-hours;
+- peak system RAM and peak GPU memory, when applicable;
+- training and inference token counts, model calls, and generated examples;
 - purpose and associated configuration; and
 - whether the run contributed to a reported result.
 
-Before each run above a self-chosen materiality threshold, write:
+Before each material run, write:
 
 1. hypothesis;
 2. smallest sufficient experiment;
-3. estimated cost;
+3. estimated wall-clock time and peak memory;
 4. success/failure criterion; and
 5. stopping rule.
 
-The cap is intended to reward efficient experimental design. More spend is not evidence of better research.
+Measure efficiency in elapsed time, CPU-hours, memory, tokens, model calls, and optional local GPU-hours—not dollars. Prefer quantization, parameter-efficient training, small pilot datasets, caching, and early stopping where they preserve the experimental question. Reproducibility on the student's laptop is a hard requirement: document operating system, hardware, thread limits, dependency versions, model revision, quantization format, random seeds, and the exact commands for both the primary path and CPU fallback.
 
 ## 11. Required ablations
 
@@ -390,7 +390,7 @@ A complete submission includes:
 7. SFT configuration, logs, checkpoint or adapter location, and model/system card;
 8. inference-scaling configurations and compute/performance curves;
 9. optional RL implementation and ablations, if attempted;
-10. experiment registry with commit hashes, seeds, hardware, costs, and outcomes;
+10. experiment registry with commit hashes, seeds, hardware, wall-clock time, CPU/GPU-hours, memory, and outcomes;
 11. final system and one-command evaluation instructions;
 12. final research report using `reports/final_report_template.md`; and
 13. a concise presentation or recorded walkthrough suitable for technical review.
@@ -421,7 +421,7 @@ Reaching the final numerical target is evidence in the “model improvement” c
 A successful project leaves a reviewer able to answer:
 
 - What was the initial capability gap?
-- Which interventions closed it, by how much, and at what cost?
+- Which interventions closed it, by how much, and with what local compute and memory use?
 - Are the comparisons reproducible and fair?
 - Does the system generalize beyond training targets and common trajectories?
 - Which behavior belongs to the model versus the deterministic solver or search procedure?

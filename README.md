@@ -24,6 +24,18 @@ pytest src/
 python src/evaluation/benchmark.py --model smollm-360m --games 100
 ```
 
+## Theory
+
+The [`theory/`](theory/) folder connects the reading material to the experiments. All notes assume a local-only workflow with no cloud services or paid APIs.
+
+- [Theory Guide](theory/README.md) — reading order and the theory-to-experiment learning loop.
+- [Ablations](theory/01_ablations.md) — controlled comparisons, interaction effects, pitfalls, and required project ablations.
+- [Local LLMs](theory/02_local_llms.md) — memory math, quantization, CPU/GPU inference, and local resource measurement.
+- [Prompting and Representation](theory/03_prompting_and_representation.md) — raw history, structured constraints, candidate lists, and output reliability.
+- [Search and Solver](theory/04_search_and_solver.md) — filtering, entropy, hybrid systems, self-consistency, beam search, and MCTS.
+- [Training and SFT](theory/05_training_and_sft.md) — teacher data, LoRA, local training, generalization, and memorization checks.
+- [Evaluation and Statistics](theory/06_evaluation_and_statistics.md) — win rate, confidence intervals, paired bootstrap, failure analysis, and Pareto frontiers.
+
 Full docs: see PROBLEM.md, curriculum/, problems/
 
 ## Repo Structure

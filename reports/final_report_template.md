@@ -13,7 +13,7 @@ Record the following on the first page:
 - repository commit hash used for final evaluation;
 - model and tokenizer identifiers with revisions;
 - dataset, target-list, allowed-guess-list, and split versions or hashes;
-- total measured project cost and accelerator-hours;
+- total local compute (wall-clock, CPU-hours, peak memory) and hardware description;
 - final-system configuration ID; and
 - a one-sentence disclosure of any external APIs, black-box teachers, or solution materials used.
 
@@ -67,7 +67,7 @@ Define the project as a controlled investigation, not merely an implementation t
 - State the primary research question and pre-declared final challenge.
 - Define “within 5 percentage points” as an absolute win-rate gap.
 - Give the operational threshold used for “substantially less inference compute.”
-- State the $300 compute cap and what expenses were counted.
+- State the local-only execution requirement and what local resources were measured (wall-clock, CPU-hours, peak RAM, tokens).
 - Distinguish Wordle performance from claims about general reasoning.
 - Identify what was fixed before optimization and what remained a design choice.
 
@@ -549,18 +549,18 @@ Present a cumulative system table and targeted one-factor ablations.
 
 Summarize all project compute, including unsuccessful and exploratory runs.
 
-| Category | Accelerator/API | Hardware-hours or tokens | Measured cost | Share of $300 | Useful outcome |
-|---|---|---:|---:|---:|---|
-| Environment and debugging | | | | | |
-| Baselines and prompts | | | | | |
-| Data generation | | | | | |
-| SFT pilots | | | | | |
-| Main SFT | | | | | |
-| Search/inference/RL | | | | | |
-| Final evaluation | | | | | |
-| **Total** | | | | | |
+| Category | Wall-clock time | Peak RAM | CPU-hours | Useful outcome |
+|---|---:|---:|---:|---|
+| Environment | | | | |
+| Baselines | | | | |
+| Data generation | | | | |
+| SFT pilots | | | | |
+| Main SFT | | | | |
+| Search/inference | | | | |
+| Final evaluation | | | | |
+| **Total** | | | | |
 
-State whether the $300 cap was met. Include local compute even when its measured monetary charge was zero.
+State whether the system runs entirely locally on consumer hardware without paid services. Include CPU fallback timing and memory usage. All models must be <1B params runnable in <16GB RAM.
 
 ### 13.2 Training efficiency
 
@@ -584,12 +584,12 @@ Provide Pareto plots and identify dominated configurations. Compare:
 
 Explain the design under:
 
-- a **$150 project budget**;
+- **half the local time budget (e.g., 6 hours vs 12 hours)**;
 - one-tenth the inference budget;
 - ten times the research budget; and
-- deployment at **one million games per day**.
+- deployment at **one million games per day using local machines**.
 
-For production scale, estimate daily model calls, tokens, accelerator/API cost, throughput, cache opportunities, reliability requirements, and the point at which a deterministic method is preferable.
+For production scale, estimate the number of local machines required, daily model calls and tokens, throughput, memory and storage requirements, energy use, cache opportunities, reliability requirements, and the point at which a deterministic method is preferable.
 
 **Guiding questions**
 
@@ -813,7 +813,7 @@ Summarize pre-registered hypotheses, decision gates, changes to the protocol, an
 - [ ] Win rates include counts, denominators, and 95% confidence intervals.
 - [ ] Key differences use paired analyses where appropriate.
 - [ ] Training and inference compute are reported for every major system.
-- [ ] Total measured spend is at or below $300, or an approved exception is disclosed.
+- [ ] System runs entirely locally without paid cloud/API calls, with local resource usage documented.
 - [ ] The reference protocol and lower-compute criterion are explicit.
 - [ ] Ablations isolate the claimed sources of improvement.
 - [ ] Negative and null results that affected decisions are included.
