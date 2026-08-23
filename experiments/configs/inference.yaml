@@ -1,0 +1,42 @@
+# Inference-time scaling sweep
+experiment:
+  name: inference_scaling
+  seed: 42
+  output_dir: experiments/results/inference_scaling
+model:
+  name: experiments/results/sft/best
+  base_name: HuggingFaceTB/SmolLM-360M-Instruct
+  dtype: auto
+  device_map: auto
+data:
+  answers: data/wordle/answers.txt
+  allowed_guesses: data/wordle/allowed.txt
+  split: test
+  max_games: 1000
+solver:
+  exact_constraint_filter: true
+  ranker: entropy
+  candidate_guess_pool: allowed
+  precompute_pattern_table: true
+sampling:
+  temperatures: [0.0, 0.3, 0.7, 1.0]
+  samples_per_state: [1, 4, 8, 16]
+  max_new_tokens: 32
+  top_p: 0.95
+reranking:
+  methods: [vote, model_logprob, entropy, hybrid]
+  entropy_weight: 1.0
+  model_logprob_weight: 0.25
+beam:
+  widths: [1, 2, 4, 8]
+  depths: [1, 2]
+  expansion_top_k: 20
+  objective: expected_remaining
+evaluation:
+  max_turns: 6
+  fixed_target_order: true
+  count_invalid_as_turn: true
+  track_generated_tokens: true
+  track_model_calls: true
+  track_wall_time: true
+  metrics: [win_rate, average_guesses_wins, invalid_guess_rate, tokens_per_game, seconds_per_game]
