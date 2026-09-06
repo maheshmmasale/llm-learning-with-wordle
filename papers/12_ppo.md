@@ -9,6 +9,17 @@ keeps the trust-region benefits of complex predecessors (TRPO) with
 first-order simplicity. It became the default RL algorithm and the engine
 inside RLHF.
 
+## How it works
+
+Standard policy gradient ascends E[ratio × advantage], where the ratio is
+how much more likely an action is under the new policy. PPO replaces it with
+min(ratio × A, clip(ratio, 1−ε, 1+ε) × A): improvements beyond the trust
+boundary simply stop counting, so no minibatch can yank the policy far.
+Advantages come from **GAE** (exponentially-weighted multi-step returns
+trading bias against variance). Training loops over several epochs of the
+same fresh rollouts, jointly fitting a value function and adding an entropy
+bonus for exploration. On-policy data only — stable, sample-hungry.
+
 ## Key concepts
 
 - **Policy gradient**: reinforce actions that led to reward; the gradient
@@ -23,11 +34,13 @@ inside RLHF.
 - **On-policy**: learn only from fresh rollouts of the current policy —
   sample-inefficient but stable, the opposite of Q-learning-style replay.
 
-## Why it matters here
+## Why learn this
 
-PPO is the "P" in the RLHF your course deliberately skips — but TRL (in
-your requirements) ships PPO and GRPO trainers, and milestone 8's optional
-RL track starts here. Understand clipping and you've understood 80% of it.
+PPO teaches stability engineering: most RL failures are step-size failures,
+and clipping is the general principle "don't move faster than your data
+supports." That intuition transfers well beyond RL — to finetuning learning
+rates, KL leashes, and any iterative process that can collapse from one bad
+update.
 
 ## Links
 

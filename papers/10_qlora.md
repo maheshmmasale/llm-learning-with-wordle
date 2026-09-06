@@ -8,6 +8,18 @@ finetuning a 65B model on one 48GB GPU with no quality loss. Three tricks:
 NF4 (optimal for normally-distributed weights), double quantization
 (compress the quantization constants), paged optimizers (no memory spikes).
 
+## How it works
+
+Weights are approximately normal, so quantization bins are placed at the
+**quantiles of N(0,1)** — equal probability mass per bin, which is
+information-theoretically optimal and beats naive uniform bins. Quantization
+happens in small blocks, each with its own scale constant; **double
+quantization** then quantizes those constants too, clawing back ~0.4
+bits/parameter. The 4-bit base stays frozen while gradients flow through it
+(dequantized on the fly in BF16) into the LoRA adapters. **Paged optimizers**
+spill momentary memory spikes to CPU RAM instead of OOM-crashing. Net
+effect: ~0.5 bits/parameter overhead for the base model.
+
 ## Key concepts
 
 - **4-bit NormalFloat (NF4)**: a datatype shaped to the actual distribution
@@ -21,11 +33,12 @@ NF4 (optimal for normally-distributed weights), double quantization
 - **Guanaco result**: QLoRA-tuned models reached ~99% of ChatGPT on Vicuna
   benchmarks, proving quantization doesn't cost capability.
 
-## Why it matters here
+## Why learn this
 
-If LoRA doesn't fit your hardware, QLoRA is plan B for milestone 6 — and
-its NF4/quantization ideas are why your small models can run inference
-locally at all. The bitsandbytes line in `requirements-ml.txt` is this paper.
+QLoRA teaches **memory math**: budgeting bits per parameter is the skill
+behind running anything big on small hardware. The pattern — match the
+datatype to the data distribution, compress the metadata too, page the
+spikes — transfers to every resource-constrained system you'll ever build.
 
 ## Links
 

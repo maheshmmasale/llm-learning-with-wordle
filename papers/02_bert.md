@@ -7,7 +7,18 @@ BERT reads **both directions at once**: randomly mask 15% of tokens and train
 the model to reconstruct them from full surrounding context. This
 bidirectional pretraining plus a next-sentence task made BERT state of the
 art on eleven language tasks at once, and started the pretrain-then-finetune
-era this course lives in.
+era.
+
+## How it works
+
+Text is WordPiece-tokenized with `[CLS]`/`[SEP]` markers; 15% of tokens are
+chosen for masking (80% replaced with `[MASK]`, 10% with random tokens, 10%
+left unchanged, so the model can't just pattern-match masks). Two losses
+train jointly: **masked LM** (predict hidden tokens from both sides) and
+**next-sentence prediction** (does sentence B follow A?). The 12- or
+24-layer bidirectional encoder trains on BooksCorpus + Wikipedia, then each
+downstream task needs only one new output layer finetuned briefly — the same
+weights seed them all.
 
 ## Key concepts
 
@@ -16,18 +27,19 @@ era this course lives in.
 - **Bidirectional context**: meaning flows left-to-right and right-to-left,
   unlike autoregressive models that only see the past.
 - **Encoder**: BERT keeps the Transformer's understanding half and drops
-  generation — great for classification, not for writing guesses.
+  generation — great for classification, not for writing text.
 - **Pretrain then finetune**: one expensive general training run, then cheap
-  adaptation per task. Your LoRA milestone is the modern version of step two.
+  adaptation per task. LoRA is the modern version of step two.
 - **[CLS] token**: a special position whose embedding summarizes the whole
   input for classification decisions.
 
-## Why it matters here
+## Why learn this
 
-You will finetune decoder models, not BERT — but BERT is why the field
-believes small models plus the right training recipe beat bigger models
-with the wrong one. MLM is also the cleanest example of getting supervision
-for free, the trick your synthetic Wordle data reuses.
+This paper teaches the transfer-learning paradigm that still runs the field:
+general pretraining, cheap adaptation. MLM is also the cleanest example of
+manufacturing supervision from raw text — once you see it, you start spotting
+free training signals everywhere, which is the core skill behind all
+synthetic-data work.
 
 ## Links
 

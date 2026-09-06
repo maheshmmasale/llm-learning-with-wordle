@@ -8,25 +8,36 @@ Chinchilla-style long training democratize capable models. LLaMA's release
 (and leak) ignited the open-model ecosystem — SmolLM, Qwen, and TinyLlama
 are its philosophical children.
 
+## How it works
+
+Decoder-only Transformer with three tweaks that all stuck: **RMSNorm**
+(pre-normalization using root-mean-square instead of mean-variance —
+cheaper, equally stable), **SwiGLU** activations (gated linear units that
+outperform ReLU/GELU in the feed-forward blocks), and **rotary position
+embeddings (RoPE)**, which encode relative position by rotating query/key
+vectors instead of adding absolute signals. Trained ~1–1.4T tokens of public
+sources with a standard BPE tokenizer plus byte fallback. The 13B checkpoint
+beat GPT-3 nearly everywhere while fitting on one server node.
+
 ## Key concepts
 
-- **Open weights**: releasing parameters, not just API access. Everything
-  local in this course depends on this decision existing.
+- **Open weights**: releasing parameters, not just API access. Local,
+  inspectable, finetunable models depend on this decision existing.
 - **Public-data-only training**: competitive models need no secret crawl —
   reproducibility becomes possible for outsiders.
-- **Architectural tweaks that stuck**: RMSNorm, SwiGLU activations, rotary
-  embeddings (RoPE). Your models use all three; RoPE is why position
-  handling differs from the original Transformer.
+- **Architectural tweaks that stuck**: RMSNorm, SwiGLU, RoPE. You will meet
+  all three in every modern model card; this is where they were popularized.
 - **Efficient inference**: smaller models at more tokens each — the recipe
-  your laptop-grade agents copy.
+  laptop-grade agents copy.
 - **The leak effect**: LLaMA's torrent leak proved demand for runnable
   models and forced the open ecosystem (Alpaca, Vicuna, finetune tooling).
 
-## Why it matters here
+## Why learn this
 
-Your base models exist because LLaMA proved small-and-open works. When you
-load SmolLM-360M or Qwen2-0.5B, you are standing on this paper's training
-recipe and its licensing fight.
+Every model card you will ever read is written in LLaMA's vocabulary —
+RMSNorm, SwiGLU, RoPE, tokens-per-parameter. Learning this paper is learning
+to read the spec sheet: you can look at any new release and know within
+minutes what actually changed versus what is marketing.
 
 ## Links
 

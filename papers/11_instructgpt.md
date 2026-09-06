@@ -8,6 +8,18 @@ is three stages: supervised finetuning on human demonstrations, train a
 against it with PPO. A 1.3B InstructGPT beat the 175B base GPT-3 in human
 preference. Alignment, not size, made assistants useful.
 
+## How it works
+
+**Step 1 (SFT):** finetune GPT-3 on human-written ideal responses so outputs
+are in the right format. **Step 2 (RM):** show labelers pairs of model
+outputs, collect which-is-better rankings, and train a reward model to
+predict human preference (pairwise ranking loss). **Step 3 (PPO):** sample
+prompts, generate responses, score them with the RM, and RL-update the
+policy — with a **KL penalty** per token anchoring it to the SFT model so it
+can't drift into high-reward gibberish. Evaluation is human win-rate against
+baselines plus targeted probes (toxicity, truthfulness, bias), with labeler
+disagreement reported rather than hidden.
+
 ## Key concepts
 
 - **SFT on demonstrations**: step one — imitate human-written ideal answers
@@ -22,11 +34,13 @@ preference. Alignment, not size, made assistants useful.
 - **Labeler agreement**: human preferences are noisy; the paper measures
   annotator disagreement honestly instead of hiding it.
 
-## Why it matters here
+## Why learn this
 
-Your SFT milestone skips RLHF (too costly), but the paper defines what your
-finetuned model is missing: it imitates solver moves (step one) without ever
-learning human-like preferences. Know which step you skipped and what it costs.
+InstructGPT is the reference design for turning a raw model into a useful
+one — and a catalog of failure modes (reward hacking, sycophancy, noisy
+labels) that recur in every alignment effort since. Even if you never run
+RLHF, its three-stage anatomy (demonstrate → model preferences → optimize
+with a leash) is the template all lighter methods are compressing.
 
 ## Links
 

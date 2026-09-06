@@ -6,7 +6,19 @@ Add "let's think step by step" (or a few worked examples) and large models
 suddenly solve math and logic tasks they flunked outright. Intermediate
 tokens act as scratch space: each reasoning step is more computation spent
 before committing to an answer. The gains appear with scale — small models
-benefit less, which your milestone 3 will confirm firsthand.
+benefit less, which is worth verifying rather than assuming.
+
+## How it works
+
+In **few-shot CoT**, prompt exemplars pair each question with a written
+solution trace, not just the answer; the model continues the pattern,
+generating its own trace before answering. **Zero-shot CoT** appends "Let's
+think step by step" with no examples — weaker but free. Why does it help?
+Each generated token is another full forward pass: a 50-token rationale is
+50× the serial computation of blurting the answer, spent in a form the
+model's next-token machinery can use. Ablations show language traces beat
+equation-only traces, and gains concentrate on multi-step tasks (GSM8K math,
+commonsense, symbolic manipulation) while single-step tasks barely move.
 
 ## Key concepts
 
@@ -17,16 +29,17 @@ benefit less, which your milestone 3 will confirm firsthand.
   answers. Format of the scratchpad matters as much as its presence.
 - **Zero-shot CoT**: the magic sentence "Let's think step by step" with no
   examples at all — weaker, but free.
-- **Emergence**: CoT helps 100B+ models far more than small ones. Your 0.5B
-  model may barely budge — that negative result is itself the lesson.
+- **Emergence**: CoT helps 100B+ models far more than small ones.
 - **Faithfulness caveat**: the shown reasoning isn't guaranteed to be the
   real reasoning. Never treat CoT as an audit trail.
 
-## Why it matters here
+## Why learn this
 
-Your milestone-3 "structured reasoning" prompts are CoT applied to Wordle:
-list greens, exclusions, multiplicities, then guess. The paper predicts your
-small model will gain little — test that prediction, don't assume it.
+CoT teaches the compute-via-tokens mental model: inference spending is a
+design variable, not a fixed cost. It also teaches technique
+scale-dependence — a method's paper result on giant models says little about
+your small one. "Reproduce the gain at your scale before building on it" is
+a habit this paper rewards.
 
 ## Links
 

@@ -8,6 +8,17 @@ so you can skip the reward model and RL entirely — finetune directly on
 (chosen, rejected) pairs with one cross-entropy-like loss. Same alignment
 signal, one training run, no PPO instability.
 
+## How it works
+
+Start from the RLHF objective (maximize reward minus β·KL to a reference)
+and solve it analytically: the optimal reward can be rewritten purely in
+terms of the optimal policy's log-ratios. Plug that expression into the
+Bradley-Terry preference model and the reward cancels out — leaving a loss
+that raises the winner's likelihood relative to the loser, both measured
+against the frozen reference model. One hyperparameter, β, sets how hard
+the KL leash pulls. Training is a single supervised run on preference pairs;
+no sampling loop, no value network, no clipping.
+
 ## Key concepts
 
 - **Preference pairs**: (prompt, winner, loser). Cheaper than rankings,
@@ -22,11 +33,12 @@ signal, one training run, no PPO instability.
 - **Beta**: the single temperature knob trading preference fit against
   staying close to the reference.
 
-## Why it matters here
+## Why learn this
 
-DPO is the pragmatic alignment upgrade path after your LoRA milestone: same
-preference-pair data idea, none of RLHF's infrastructure. If milestone 8
-ever grows teeth, this — not PPO — is the algorithm you'd actually run.
+DPO is the art of deleting machinery: a four-model RL pipeline reduced to
+one loss function by solving the math first. That move — find the closed
+form, dissolve the pipeline — is the highest-leverage skill in ML
+engineering, and this paper is its cleanest recent demonstration.
 
 ## Links
 

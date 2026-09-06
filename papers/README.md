@@ -2,9 +2,9 @@
 
 ## The 20 papers: read the brief first
 
-Each file below fits on one screen: what the paper shows, the concepts it
-needs, why it matters for this course, plus paper and video links. In a
-hurry, the brief alone suffices; curious, follow the links.
+Each file below fits on one screen: what the paper shows, how it works,
+the concepts it needs, why it is worth learning, plus paper and video
+links. In a hurry, the brief alone suffices; curious, follow the links.
 
 Foundations: [01 Attention](01_attention-is-all-you-need.md) ·
 [02 BERT](02_bert.md) · [03 GPT-2](03_gpt2.md) · [04 GPT-3](04_gpt3.md) ·

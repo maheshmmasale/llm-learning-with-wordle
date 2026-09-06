@@ -8,6 +8,16 @@ and training tokens should scale **equally** (~20 tokens per parameter).
 A 70B model on 1.4T tokens beat 175B–280B models trained on less. Lesson:
 data scale is as important as model scale.
 
+## How it works
+
+Fit a parametric loss L(N,D) = E + A/N^α + B/D^β over 400+ models (70M–16B
+params, 5B–500B tokens). For each compute budget, trace the **isoFLOP curve**
+— all (N, D) pairs costing the same — and read off its minimum: the
+compute-optimal point. Minima line up at roughly equal scaling of N and D,
+i.e. ~20 training tokens per parameter. Then the proof: train Chinchilla
+(70B, 1.4T tokens) on exactly Gopher's (280B) compute budget and watch it
+win uniformly — same FLOPs, far cheaper inference forever after.
+
 ## Key concepts
 
 - **Compute-optimal frontier**: the loss-minimizing (parameters, tokens)
@@ -16,15 +26,17 @@ data scale is as important as model scale.
   smaller model wins — directly motivating 0.5B-class models trained long.
 - **Equal scaling**: double parameters → double data, not parameters alone.
 - **Inference bonus**: smaller compute-optimal models are also cheaper to
-  serve, which is why your Wordle agent can run on a laptop.
+  serve, which is why capable agents can run on a laptop.
 - **Empirical refit**: scaling "laws" are fitted, not derived — 400+ runs
-  beat theory, a precedent for your own ablations-over-opinions approach.
+  beat theory, a precedent for ablations-over-opinions thinking.
 
-## Why it matters here
+## Why learn this
 
-Chinchilla is the license for this entire course: small, well-trained open
-models are not toys, they are the compute-optimal regime. It also frames
-your data-generation milestone — tokens are half the scaling equation.
+Chinchilla teaches that established "laws" are just last year's best fit —
+ overturnable by better experiments. Practically, it justifies the small-model
+bet everywhere: when someone says you need 70B parameters, ask for their
+tokens-per-parameter first. Data-rich small models are a strategy, not a
+compromise.
 
 ## Links
 

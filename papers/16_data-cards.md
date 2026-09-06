@@ -8,6 +8,19 @@ collection, preprocessing, uses, distribution, maintenance — that every
 dataset should answer before release. It turned "document your data" from
 advice into a reviewable artifact and underlies modern data/model cards.
 
+## How it works
+
+57 questions across 7 lifecycle stages, each with a rationale for why the
+answer matters. **Motivation** (purpose, creators, funding) exposes
+incentive problems. **Composition** (instances, missing pieces, subpopulation
+breakdown) surfaces bias before training does. **Collection** (sources,
+sampling, consent, annotator pay) and **preprocessing** (cleaning, labels,
+raw-data retention) make the pipeline auditable. **Uses** demands explicit
+in-scope/out-of-scope tasks. **Distribution and maintenance** treat the
+dataset as versioned software with updates and deprecation. Two fully worked
+examples (Labeled Faces in the Wild, polarity data) show what good answers
+look like.
+
 ## Key concepts
 
 - **Motivation**: why was this dataset built, by whom, funded by whom?
@@ -15,19 +28,21 @@ advice into a reviewable artifact and underlies modern data/model cards.
 - **Composition**: what's inside, what's missing, which populations are
   underrepresented — the section that catches bias before training does.
 - **Collection & preprocessing**: how raw material became rows: sampling,
-  filters, labelers, pay, consent. Your solver-teacher pipeline needs this.
-- **Recommended uses (and non-uses)**: the authors demand explicit scope —
-  "trained on 65 common words, not valid for rare-word claims" is this habit.
+  filters, labelers, pay, consent.
+- **Recommended uses (and non-uses)**: explicit scope — "valid for common
+  words, not for rare-word claims" is this habit.
 - **Distribution & maintenance**: versioning, updates, deprecation. A
   dataset is software with a lifecycle, not a file.
 
-## Why it matters here
+## Why learn this
 
-Milestone 5 requires a data card and leakage audit — that *is* a datasheet.
-The companion video below covers the sibling Data Cards framework (Google
-PAIR, FAccT 2022): same spirit, industry packaging. Read both, write one.
+The questionnaire habit transfers to any data you touch: asking these
+questions *before* collecting changes what you collect, which is enormously
+cheaper than discovering bias after training. And "documentation as
+engineering artifact" generalizes — model cards, eval reports, and incident
+writeups all rhyme with it.
 
 ## Links
 
 - Paper: https://arxiv.org/abs/1803.09010
-- Video: [Data Cards: Purposeful and Transparent Documentation — ACM FAccT](https://www.youtube.com/watch?v=jcQ4A2EbFW8)
+- Video: [Data Cards: Purposeful and Transparent Documentation — ACM FAccT](https://www.youtube.com/watch?v=jcQ4A2EbFW8) (covers the sibling Data Cards framework — same spirit, industry packaging)
