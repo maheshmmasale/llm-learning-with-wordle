@@ -54,13 +54,19 @@ class Turn:
 
 
 class WordleEnv:
-    """A six-turn deterministic Wordle game.
+    """A deterministic Wordle game with length-scaled turns.
 
     A target is supplied by the evaluator, never included in observations.
     ``allowed_guesses`` controls validation independently of possible answers.
+    ``max_turns`` defaults to the word length (5 turns for 5 letters).
     """
 
-    def __init__(self, target: str, allowed_guesses: Iterable[str], max_turns: int = 6):
+    def __init__(
+        self,
+        target: str,
+        allowed_guesses: Iterable[str],
+        max_turns: int | None = None,
+    ):
         target = target.lower()
         if not target.isalpha():
             raise ValueError("target must be alphabetic")
@@ -73,7 +79,7 @@ class WordleEnv:
         if target not in self.allowed_guesses:
             raise ValueError("target must be in allowed_guesses")
         self._target = target
-        self.max_turns = max_turns
+        self.max_turns = max_turns if max_turns is not None else len(target)
         self.history: list[Turn] = []
 
     @property

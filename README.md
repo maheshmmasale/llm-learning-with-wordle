@@ -22,8 +22,9 @@ python -m pytest tests/ solutions/01_environment/
 python -m src.evaluation.benchmark --policy solver --limit 50 --seed 0
 ```
 
-Every command above is verified in CI-less local runs: 47 tests pass and the
-solver benchmark wins every game on the shipped word lists. For model
+Every command above is verified in local runs: 62 tests pass. The solver
+reference scores 87.4% over all 2,200 answers in ~1 min — beating it is the
+game. For model
 milestones (data generation, SFT, inference scaling):
 
 ```bash
@@ -50,9 +51,9 @@ Full docs: see PROBLEM.md, curriculum/, problems/
 src/            Maintained library: environment, evaluation, models,
                 search, training, utils (tested by tests/).
 tests/          Pytest suite for src/ plus the milestone-01 tests.
-data/           Shipped word lists: 5-letter (65 answers + 8,506 guesses),
-                plus 6-letter (40 + 15,073) and 7-letter (48 + 20,562) sets.
-                Engine is length-agnostic; longer words, same rules.
+data/           Word lists for lengths 5-9: 2,200 frequency-ranked answers
+                each; guesses 8,506 / 15,073 / 20,562 / 26,446 / 28,841.
+                Turns default to word length; engine is length-agnostic.
                 Curated common words; swap in licensed full-size lists
                 without code changes.
 solutions/      Frozen per-milestone reference snapshots. Self-contained

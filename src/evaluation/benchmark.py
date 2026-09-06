@@ -33,22 +33,28 @@ except ImportError:  # direct script execution: `python src/evaluation/benchmark
 Policy = Callable[[tuple[Any, ...], set[str]], str]
 
 
-def play_game(target: str, allowed: set[str], policy: Policy, max_turns: int = 6) -> GameResult:
+def play_game(
+    target: str, allowed: set[str], policy: Policy, max_turns: int | None = None
+) -> GameResult:
     """Play one game; invalid policy outputs consume attempts to avoid free retries."""
     env = WordleEnv(target, allowed, max_turns=max_turns)
+    budget = env.max_turns
     invalid = calls = 0
+    trail: list[tuple[str, str]] = []
     started = time.perf_counter()
     while not env.done:
         calls += 1
         guess = str(policy(env.observe(), allowed)).strip().lower()
         if guess not in allowed:
             invalid += 1
-            # Count an invalid output against the fixed six-call interaction budget.
-            if calls >= max_turns:
+            trail.append((guess, "INVALID"))
+            # Count an invalid output against the interaction budget.
+            if calls >= budget:
                 break
             continue
-        env.step(guess)
-        if calls >= max_turns and not env.done:
+        turn = env.step(guess)
+        trail.append((turn.guess, feedback_code(turn.feedback)))
+        if calls >= budget and not env.done:
             break
     return GameResult(
         target=target,
@@ -57,6 +63,7 @@ def play_game(target: str, allowed: set[str], policy: Policy, max_turns: int = 6
         invalid_guesses=invalid,
         model_calls=calls,
         wall_seconds=time.perf_counter() - started,
+        trajectory=tuple(trail),
     )
 
 
@@ -155,7 +162,8 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
     parser.add_argument("--policy", choices=POLICIES, default="solver")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--max-turns", type=int, default=6)
+    parser.add_argument("--max-turns", type=int, default=None,
+                        help="default: one turn per letter")
     parser.add_argument("--output", default=None)
     args = parser.parse_args(argv)
 

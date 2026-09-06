@@ -23,6 +23,19 @@ def test_harness_all_solved_reports_no_fail_time():
     assert summary["avg_attempts_solve"] == 1
 
 
+def test_trajectories_record_every_attempt():
+    summary = run_harness(["apple", "grape"], GUESSES, lambda: (lambda h, a: min(a)))
+    by_target = {t["target"]: t for t in summary["trajectories"]}
+    assert by_target["apple"]["won"] is True
+    assert by_target["apple"]["turns"][0] == {
+        "attempt": 1, "guess": "apple", "feedback": "GGGGG",
+    }
+    lost = by_target["grape"]
+    assert lost["won"] is False
+    assert [t["attempt"] for t in lost["turns"]] == [1, 2, 3, 4, 5]
+    assert all(set(t) == {"attempt", "guess", "feedback"} for t in lost["turns"])
+
+
 def test_schedule_is_deterministic_and_sized():
     first = sample_schedule(ANSWERS, 1000, seed=0)
     assert first == sample_schedule(ANSWERS, 1000, seed=0)

@@ -16,10 +16,12 @@ class GameResult:
     model_calls: int = 0
     generated_tokens: int = 0
     wall_seconds: float = 0.0
+    trajectory: tuple[tuple[str, str], ...] = ()
+    """Per-attempt (guess, feedback-code) pairs; invalid guesses map to "INVALID"."""
 
 
 def summarize(results: Iterable[GameResult]) -> dict[str, Any]:
-    """Compute metrics using all games; unsolved games count as six guesses made."""
+    """Compute metrics using all games; unsolved games count at max turns."""
     rows = list(results)
     if not rows:
         raise ValueError("cannot summarize zero games")

@@ -44,7 +44,7 @@ def run_harness(
     allowed_guesses: Sequence[str],
     policy_factory: PolicyFactory,
     *,
-    max_turns: int = 6,
+    max_turns: int | None = None,
 ) -> dict[str, Any]:
     """Play every target once; split results into solved vs unsolved."""
     allowed = set(allowed_guesses)
@@ -58,6 +58,18 @@ def run_harness(
         "games": len(results),
         "solved": len(solved),
         "unsolved": len(unsolved),
+        "trajectories": [
+            {
+                "target": r.target,
+                "won": r.won,
+                "seconds": r.wall_seconds,
+                "turns": [
+                    {"attempt": i + 1, "guess": guess, "feedback": fb}
+                    for i, (guess, fb) in enumerate(r.trajectory)
+                ],
+            }
+            for r in results
+        ],
         "win_rate": len(solved) / len(results) if results else 0.0,
         "avg_seconds_solve": mean(r.wall_seconds for r in solved) if solved else None,
         "avg_seconds_fail": mean(r.wall_seconds for r in unsolved) if unsolved else None,
@@ -85,7 +97,8 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
     parser.add_argument("--guesses", default="data/guesses.txt")
     parser.add_argument("--games", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--max-turns", type=int, default=6)
+    parser.add_argument("--max-turns", type=int, default=None,
+                        help="default: one turn per letter")
     parser.add_argument("--output", default=None)
     args = parser.parse_args(argv)
 

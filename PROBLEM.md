@@ -102,7 +102,8 @@ or a lossless structured representation of that history. The agent outputs one n
 An episode terminates when:
 
 - \(g_t=w^*\), producing a win on turn \(t\); or
-- six guess opportunities are exhausted, producing a loss.
+- the turn budget is exhausted, producing a loss. The budget defaults to one
+  turn per letter (5 turns for 5 letters, 9 for 9) and is overridable per run.
 
 ### 4.4 Determinism and reproducibility
 
@@ -122,7 +123,7 @@ The environment is deterministic. A guess and target produce one correct feedbac
 
 ### 5.3 Objective outcomes
 
-Every episode ends in a solve turn or failure after six attempts. The primary metric requires no subjective annotator. Secondary errors—invalid words, malformed output, contradictions, and constraint violations—can also be counted automatically.
+Every episode ends in a solve turn or failure at the turn budget. The primary metric requires no subjective annotator. Secondary errors—invalid words, malformed output, contradictions, and constraint violations—can also be counted automatically.
 
 ### 5.4 Cheap repeated trials
 

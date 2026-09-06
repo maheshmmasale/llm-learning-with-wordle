@@ -77,13 +77,22 @@ def test_win_and_history():
     assert isinstance(env.observe(), tuple)
 
 
-def test_loss_after_six_turns():
+def test_loss_after_default_turns():
     env = _env()
-    for _ in range(6):
+    assert env.max_turns == env.word_length == 5  # one turn per letter
+    for _ in range(5):
         env.step("ppppp")
     assert env.done and not env.won
     with pytest.raises(RuntimeError):
         env.step("apple")
+
+
+def test_explicit_max_turns_overrides_default():
+    env = WordleEnv("apple", ["apple", "ppppp"], max_turns=8)
+    assert env.max_turns == 8
+    for _ in range(6):
+        env.step("ppppp")
+    assert not env.done
 
 
 def test_invalid_guess_rejected_without_consuming_turn():

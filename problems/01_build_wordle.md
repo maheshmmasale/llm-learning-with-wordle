@@ -19,17 +19,19 @@ Implement a production-quality, deterministic Wordle environment that can serve 
 
 ## Background
 
-Wordle asks a player to identify a hidden five-letter answer in at most six guesses. After each valid guess, the game returns one feedback symbol per character: 🟩 means that the letter is in the correct position, 🟨 means that the letter occurs elsewhere in the answer, and ⬛ means that the guessed letter cannot receive either of those matches. Repeated letters make feedback computation subtle. A guessed letter may appear more times than it occurs in the answer, and only the answer’s available occurrences may be colored green or yellow. Any implementation that independently checks whether each guessed letter appears somewhere in the answer will therefore be wrong.
+Wordle asks a player to identify a hidden five-letter answer in at most five
+guesses (one turn per letter; longer words get proportionally more turns). After each valid guess, the game returns one feedback symbol per character: 🟩 means that the letter is in the correct position, 🟨 means that the letter occurs elsewhere in the answer, and ⬛ means that the guessed letter cannot receive either of those matches. Repeated letters make feedback computation subtle. A guessed letter may appear more times than it occurs in the answer, and only the answer’s available occurrences may be colored green or yellow. Any implementation that independently checks whether each guessed letter appears somewhere in the answer will therefore be wrong.
 
 The environment will later be used for controlled comparisons among prompting strategies, language models, and deterministic solvers. Small ambiguities can invalidate those comparisons. For example, a hidden answer accidentally included in serialized state would create target leakage; nondeterministic answer selection would make paired experiments incomparable; inconsistent word-list normalization could change the denominator of a reported win rate. Treat the environment as a compact benchmark package, not as a demo script.
 
 Use two distinct vocabularies: the shipped `data/guesses.txt` (8,506 words) and
-`data/answers.txt` (65 curated common words) and `data/guesses.txt` (8,506
-words from the BSD system dictionary). Every answer must be a valid guess;
-most valid guesses need not be answers. Answers stay small and common on
-purpose — the official ~2,300-word list is copyrighted — while guesses are
-full-scale so solving is realistic. `src/environment/vocab.py` accepts
-licensed replacements with no code changes. Document the normalization policy and report the
+`data/answers.txt` (2,200 frequency-ranked common words) and
+`data/guesses.txt` (8,506 words from the BSD system dictionary), with
+matching pairs for 6–9 letters (`data/answers6.txt`, …). Every answer must
+be a valid guess; most valid guesses need not be answers. Frequency-ranked
+answers replace the official list, which is copyrighted and cannot be
+redistributed. `src/environment/vocab.py` accepts licensed replacements
+with no code changes. Document the normalization policy and report the
 effective counts from the loader, not from the file headers.
 
 ## Exact Requirements
@@ -69,9 +71,9 @@ effective counts from the loader, not from the file headers.
 - A fixed seed produces the same 1,000-game answer sequence and identical feedback for identical guesses.
 - Invalid words, malformed inputs, and post-terminal guesses behave consistently and do not corrupt state.
 - Public observations and standard object representations do not reveal the target during an active game.
-- Vocabulary validation passes on the shipped lists (65 answers, 8,506 guesses),
+- Vocabulary validation passes on the shipped lists (2,200 answers and 8,506 guesses at length 5),
   with the precise loader-reported counts recorded.
-- The game ends after a correct guess or six accepted guesses by default, and status fields remain internally consistent.
+- The game ends after a correct guess or the turn budget (word length by default), and status fields remain internally consistent.
 - The implementation can be imported and driven programmatically without interactive prompts.
 
 ## Expected Experiments
