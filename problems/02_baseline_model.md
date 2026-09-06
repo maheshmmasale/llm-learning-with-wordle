@@ -1,5 +1,18 @@
 # Problem 2: Establish a Small-Language-Model Wordle Baseline
 
+## Module context
+
+Without baselines, an apparent improvement may come from an easier test set,
+a lucky first guess, answer leakage, or extra inference calls. Build the
+comparison ladder — random, heuristic, base model, prompted model, strong
+reference — before trying to improve anything.
+
+- Hints: `hints/02_baseline.md`
+- Theory: `theory/01_ablations.md`, `theory/06_evaluation_and_statistics.md`
+- Reference solution: `solutions/02_baseline/`
+- Maintained library: `src/evaluation/` (run it now:
+  `python -m src.evaluation.benchmark --policy solver --limit 50`)
+
 ## Objective
 
 Build and evaluate a reproducible baseline in which a small pretrained language model plays the deterministic Wordle environment. The target model scale is approximately 0.2–0.5 billion parameters. The deliverable should define a stable inference pipeline, a robust output parser, and a fixed benchmark protocol that measures win rate, average guesses, and invalid-guess rate. It must also compare the small model with a clearly identified strong reference model under the same game rules and answer schedule.

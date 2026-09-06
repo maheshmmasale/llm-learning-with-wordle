@@ -1,5 +1,17 @@
 # Problem 3: Systematic Prompting for Wordle Agents
 
+## Module context
+
+Prompting is the cheapest intervention and an essential control: find out how
+much capability is already present before touching weights. Design prompt
+families and compare them as ablations — producing plausible language is not
+the same as tracking exact constraints.
+
+- Hints: `hints/03_prompting.md`
+- Theory: `theory/03_prompting_and_representation.md`
+- Reference solution: `solutions/03_prompting/`
+- Maintained library: `src/models/prompting.py`
+
 ## Objective
 
 Design, implement, and evaluate at least five meaningfully different prompt strategies for a language-model Wordle agent. Use a fixed benchmark and controlled inference pipeline to estimate the win-rate delta attributable to prompting rather than answer selection, stochastic decoding, parser changes, or hidden target leakage. Prompts should elicit structured reasoning that is auditable and useful for diagnosis while ensuring that neither the target word nor evaluator-only candidate information enters the model context.

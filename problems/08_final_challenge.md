@@ -1,5 +1,16 @@
 # Problem 08 — Final Challenge: A Local End-to-End Guessing System
 
+## Module context
+
+Integrate everything under fixed budgets with a comparison against targets you write down before running.
+A credible negative result with rigorous ablations beats a high score from
+leakage or undocumented tuning.
+
+- Hints: `hints/08_final.md`
+- Theory: `theory/01_ablations.md`, `theory/06_evaluation_and_statistics.md`
+- Reference solution: `solutions/08_final/`
+- Report checklist: `reports/final_report_template.md`
+
 ## Objective
 
 Design, train, and evaluate a complete hidden-target guessing system that runs **entirely on local consumer hardware**. The submitted workflow must not require cloud compute, hosted inference, or paid APIs. It must integrate data generation, supervised learning, inference-time decision making, and rigorous evaluation within the following resource ceiling:
@@ -32,7 +43,7 @@ A GPU may accelerate development, but it is never a required dependency. The rep
 6. Freeze the rules, legal action universe, data partitions, target prior, evaluation protocol, strong reference configuration, hardware protocol, and compute units before the final evaluation.
 7. Define a strong reference policy using an exact or high-compute local entropy/search procedure. Demonstrate its strength against simpler baselines on validation data. The reference must obey the game’s information constraints and run locally under the same RAM and core ceiling.
 8. Define the primary quality target as a student win rate no more than **5.0 percentage points below** the reference on the frozen test suite. Use the paired difference in win proportions, report uncertainty, and avoid claiming success if the confidence interval is inconclusive.
-9. Define “substantially less inference compute” as a preregistered primary unit, with the student system required to use no more than one-quarter of the reference compute. Prefer hardware-independent counts such as model calls, decoded tokens, forward passes, candidate evaluations, or search nodes; also report wall-clock latency. Report neural and symbolic components independently.
+9. Define “substantially less inference compute” as a primary compute unit declared upfront, with the student system required to use no more than one-quarter of the reference compute. Prefer hardware-independent counts such as model calls, decoded tokens, forward passes, candidate evaluations, or search nodes; also report wall-clock latency. Report neural and symbolic components independently.
 10. The student system may use supervised fine-tuning, LoRA, prompting, sampling, reranking, quantization, caching, adaptive compute, or search, but all choices must be selected using training and validation data only.
 11. Enforce inference limits programmatically. Every decision must emit a trace containing model calls, tokens, candidate evaluations, entropy computations, expanded nodes, cache activity, latency, memory use, and the reason for stopping.
 12. Evaluate the final student and reference systems on identical held-out games with paired seeds and identical stopping rules. Choose a sample size justified by power analysis or confidence-width analysis.
@@ -49,7 +60,7 @@ A GPU may accelerate development, but it is never a required dependency. The rep
 - The configured run uses at most 8 CPU cores. Any GPU-accelerated path is optional and has a tested, documented CPU fallback.
 - The final student system completes a game in under 5 seconds on CPU on the declared benchmark machine; median and p95 game latency are reported.
 - The primary student system is within 5.0 percentage points of the strong reference’s win rate on the frozen paired test, with statistical uncertainty reported and interpreted conservatively.
-- The student uses at least 4× less inference compute than the reference under the preregistered primary compute unit, supported by raw counts and wall-clock measurements.
+- The student uses at least 4× less inference compute than the reference under the declared primary compute unit, supported by raw counts and wall-clock measurements.
 - All final comparisons use identical games, seeds, rules, hardware limits, and success criteria.
 - The five required ablation categories are complete and reveal the marginal contribution of each major component.
 - The local-compute ledger reconciles with machine logs within a documented tolerance and includes unsuccessful experiments.
@@ -81,7 +92,7 @@ For every final system, report:
 - optional local GPU-hours;
 - peak system RAM and peak GPU memory when applicable;
 - CPU/GPU model, operating system, core/thread settings, and relevant library versions; and
-- student-to-reference compute ratio under the preregistered primary unit.
+- student-to-reference compute ratio under the declared primary unit.
 
 Also report win-rate loss per 2× compute reduction and the location of diminishing returns. Robustness results should include absolute performance, change from IID performance, and paired gap to the reference under each shift. Do not translate local use into monetary estimates; the purpose of the ledger is reproducibility and resource accountability on consumer hardware.
 

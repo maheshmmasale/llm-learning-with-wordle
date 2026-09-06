@@ -393,28 +393,16 @@ A complete submission includes:
 10. experiment registry with commit hashes, seeds, hardware, wall-clock time, CPU/GPU-hours, memory, and outcomes;
 11. final system and one-command evaluation instructions;
 12. final research report using `reports/final_report_template.md`; and
-13. a concise presentation or recorded walkthrough suitable for technical review.
+13. the completed autograde scorecard (`python -m src.evaluation.autograde`).
 
 Large model weights and datasets should be stored through an appropriate artifact or model repository, not committed directly to Git. Include immutable identifiers and access instructions.
 
-## 13. Assessment rubric
+## 13. Assessment: the machine is the grader
 
-The project is evaluated on research quality rather than score alone:
-
-| Area | Weight | Evidence expected |
-|---|---:|---|
-| ML fundamentals | 10% | Correct formulation, training choices, optimization reasoning, understanding of model behavior |
-| Experimental design | 15% | Hypotheses, controls, frozen protocol, statistical care, leakage prevention |
-| Engineering quality | 15% | Tests, modularity, reproducibility, configuration discipline, usable benchmark tooling |
-| Baseline/evaluation quality | 10% | Strong baselines, fair reference, uncertainty, secondary metrics |
-| Model improvement | 15% | Measured gain over small-model baselines and clear attribution |
-| Search/inference reasoning | 10% | Sound hybrid design, matched-budget analysis, inference scaling curves |
-| Research insight | 15% | Explanations of successes/failures, decisions supported by evidence, limits stated clearly |
-| Ablations/failure analysis | 5% | Components isolated, difficult cases inspected, negative results retained |
-| Documentation/presentation | 5% | Clear report, figures/tables, reproducible instructions, professional communication |
-| **Total** | **100%** | |
-
-Reaching the final numerical target is evidence in the “model improvement” category, not the entire grade.
+No human evaluates this project. `python -m src.evaluation.autograde`
+scores every milestone out of 100 using fixed seeds and the shipped word
+lists. Tiers, points, and rules live in `grading_rubric.md`. Better systems
+score higher; the same command grades everyone identically.
 
 ## 14. Success criteria
 

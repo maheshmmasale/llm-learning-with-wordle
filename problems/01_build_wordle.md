@@ -1,5 +1,18 @@
 # Problem 1: Build a Deterministic Wordle Environment
 
+## Module context
+
+Before testing a language model, you need an environment whose behavior is
+exact, reproducible, and independently testable. Treat it as scientific
+infrastructure, not game code: a flawed evaluator can reward illegal
+behavior, leak the answer, or make later results untrustworthy.
+
+- Hints: `hints/01_environment.md` (open a level only when blocked)
+- Theory: `theory/01_ablations.md`, `theory/06_evaluation_and_statistics.md`
+- Reference solution: `solutions/01_environment/`
+- Maintained library: `src/environment/` (tested by `tests/test_environment.py`,
+  `tests/test_vocab.py`)
+
 ## Objective
 
 Implement a production-quality, deterministic Wordle environment that can serve as the experimental foundation for later language-model and search-based agents. The environment must expose a small, well-documented guess API, apply official-style feedback rules—including the nontrivial handling of repeated letters—and support large-scale reproducible evaluation. The assignment is not merely to make a playable game: it is to create a trustworthy research instrument whose state transitions, input validation, randomization, and information boundaries can be tested independently.
@@ -10,16 +23,35 @@ Wordle asks a player to identify a hidden five-letter answer in at most six gues
 
 The environment will later be used for controlled comparisons among prompting strategies, language models, and deterministic solvers. Small ambiguities can invalidate those comparisons. For example, a hidden answer accidentally included in serialized state would create target leakage; nondeterministic answer selection would make paired experiments incomparable; inconsistent word-list normalization could change the denominator of a reported win rate. Treat the environment as a compact benchmark package, not as a demo script.
 
-Use two distinct vocabularies: a valid-guess list of approximately 12,000 five-letter words and an answer list of approximately 2,300 five-letter words. Every answer must be a valid guess, but most valid guesses need not be eligible answers. The exact checked-in sources and normalization policy must be documented so another researcher can recreate the effective lists.
+Use two distinct vocabularies: the shipped `data/guesses.txt` (553 words) and
+`data/answers.txt` (65 words), curated common English words. Every answer must
+be a valid guess; most valid guesses need not be answers. The lists are small
+on purpose — the official full-size lists are copyrighted and cannot be
+redistributed — and `src/environment/vocab.py` accepts licensed replacements
+with no code changes. Document the normalization policy and report the
+effective counts from the loader, not from the file headers.
 
 ## Exact Requirements
 
-1. Implement a `Wordle` class with an explicit constructor and a deterministic reset mechanism. Its configuration must include the valid-guess vocabulary, answer vocabulary, maximum number of guesses, and either a supplied answer or a reproducible random seed.
-2. Expose a guess API such as `guess(word)` that validates game state and input, records accepted guesses, and returns structured feedback. The public result must include the five feedback symbols and enough non-secret state to tell whether the game was won, lost, or remains active.
+1. Implement a `WordleEnv` class with an explicit constructor taking the hidden
+   target, the allowed-guess vocabulary, and the maximum number of turns
+   (reference: `src/environment/wordle.py`). The target is supplied per game by
+   the evaluator, so no seed is needed inside the environment; benchmark-level
+   answer schedules and seeds live in `src/evaluation/benchmark.py`.
+2. Expose a `step(guess)` API that validates game state and input, records
+   accepted guesses, and returns a structured turn with the five feedback
+   symbols. Game status is read from `won`/`done`; the public observation
+   (`observe()`) must never contain the target.
 3. Enforce five-letter normalized words and reject guesses not in the valid list. Define whether normalization accepts uppercase input and surrounding whitespace. Invalid guesses must not consume an attempt unless the specification explicitly justifies a different choice.
 4. Implement exact feedback using a two-stage allocation rule: correct-position matches must be accounted for before misplaced matches, and no answer-letter occurrence may be allocated more than once. Cover cases where the answer repeats a letter, the guess repeats a letter, or both do.
-5. Use the symbols ⬛, 🟨, and 🟩 in the user-visible feedback representation. A machine-readable representation may also be provided, but its ordering and semantics must be documented.
-6. Load and validate a roughly 12k-word valid-guess list and roughly 2.3k-word answer list. Fail loudly on malformed words, duplicates after normalization, or answers absent from the valid list. Record actual effective counts in test or benchmark output.
+5. Use the machine-readable `B`/`Y`/`G` feedback codes (`src/environment/wordle.py:
+   `Mark`, `feedback_code`) as the canonical representation and document their
+   ordering and semantics. Emoji (⬛/🟨/🟩) are allowed only at the display
+   boundary, never in stored state or model input.
+6. Load and validate the shipped `data/` lists with `src/environment/vocab.py`.
+   Fail loudly on malformed words, duplicates after normalization, or answers
+   absent from the valid list. Record the actual effective counts in test or
+   benchmark output.
 7. Prevent the hidden answer from leaking through normal public attributes, `repr`, returned dictionaries, logs, exceptions, or serialized observations before game termination. Internal implementation may retain the answer, but agent-facing state must not expose it.
 8. Provide pytest coverage for state transitions, invalid inputs, terminal behavior, reproducibility, vocabulary invariants, all feedback colors, and adversarial repeated-letter examples.
 9. Add a reproducibility test or benchmark that runs 1,000 complete games from a fixed seed or fixed answer schedule and demonstrates identical answers, transcripts, and aggregate outcomes across repeated runs.
@@ -32,7 +64,8 @@ Use two distinct vocabularies: a valid-guess list of approximately 12,000 five-l
 - A fixed seed produces the same 1,000-game answer sequence and identical feedback for identical guesses.
 - Invalid words, malformed inputs, and post-terminal guesses behave consistently and do not corrupt state.
 - Public observations and standard object representations do not reveal the target during an active game.
-- Vocabulary validation confirms the expected scale (about 12,000 valid guesses and 2,300 answers), with the precise counts reported.
+- Vocabulary validation passes on the shipped lists (65 answers, 553 guesses),
+  with the precise loader-reported counts recorded.
 - The game ends after a correct guess or six accepted guesses by default, and status fields remain internally consistent.
 - The implementation can be imported and driven programmatically without interactive prompts.
 

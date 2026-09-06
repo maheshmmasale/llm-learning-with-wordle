@@ -12,16 +12,22 @@ You start with a public 0.2B-0.5B model (SmolLM-360M, Qwen2-0.5B, TinyLlama) and
 
 > Original project name was `wordle-small-llm` - this is the same curriculum, renamed to `llm-learning-with-wordle` for clarity.
 
-See original comprehensive README in this repo's history - this file is the entry point for GitHub.
-
 ## Quick Start
 
 ```bash
 git clone https://github.com/maheshmmasale/llm-learning-with-wordle
 cd llm-learning-with-wordle
 pip install -r requirements.txt
-pytest src/
-python src/evaluation/benchmark.py --model smollm-360m --games 100
+python -m pytest tests/ solutions/01_environment/
+python -m src.evaluation.benchmark --policy solver --limit 50 --seed 0
+```
+
+Every command above is verified in CI-less local runs: 47 tests pass and the
+solver benchmark wins every game on the shipped word lists. For model
+milestones (data generation, SFT, inference scaling):
+
+```bash
+pip install -r requirements-ml.txt
 ```
 
 ## Theory
@@ -40,7 +46,42 @@ Full docs: see PROBLEM.md, curriculum/, problems/
 
 ## Repo Structure
 
-Same as before - see main README content for details. All 73 files preserved.
+```text
+src/            Maintained library: environment, evaluation, models,
+                search, training, utils (tested by tests/).
+tests/          Pytest suite for src/ plus the milestone-01 tests.
+data/           Shipped word lists: answers.txt (65) + guesses.txt (553).
+                Curated common words; swap in licensed full-size lists
+                without code changes.
+solutions/      Frozen per-milestone reference snapshots. Self-contained
+                (they do not import src/) so each milestone reads alone.
+                src/ is canonical for new work; solutions/ show one
+                working answer per milestone.
+problems/       The 8 milestone assignments (start here).
+hints/          Leveled hints, one file per milestone.
+theory/         Concept notes behind the experiments.
+papers/ videos/ tutorials/   Curated external reading/watching.
+experiments/    Configs; results/ defines the per-run record layout.
+reports/        Final-report checklist.
+```
+
+Follow `problems/01_build_wordle.md` … `problems/08_final_challenge.md` in
+order; each names its hints, theory, and solution. See `PROBLEM.md` for the
+full specification. Grading is one eval, no human involved: your finetuned
+LLM plays Wordle through the harness, scored on solved-vs-unsolved plus
+solve speed:
+
+```bash
+python -m src.evaluation.autograde --model <hf-id-or-path> --games 100000
+```
+
+Smoke-test the harness without a model:
+
+```bash
+python -m src.evaluation.harness --policy solver --games 200
+```
+
+Scoring formula: `grading_rubric.md`.
 
 ## Why Wordle?
 

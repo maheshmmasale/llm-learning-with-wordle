@@ -1,5 +1,16 @@
 # Problem 4: Deterministic Constraint Solver and Hybrid LLM Agent
 
+## Module context
+
+A model may know useful word statistics while failing at exact bookkeeping.
+Separate the two: the solver owns feasibility, the model ranks or selects.
+This decomposition also tells you what the model actually contributes.
+
+- Hints: `hints/04_solver.md`
+- Theory: `theory/04_search_and_solver.md`
+- Reference solution: `solutions/04_solver/`
+- Maintained library: `src/search/` (tested by `tests/test_search.py`)
+
 ## Objective
 
 Implement a deterministic Wordle candidate-constraint solver that exactly preserves all answer candidates consistent with observed guesses and feedback, including repeated-letter cases. Integrate the solver into an evaluation framework that compares three agent conditions: an LLM acting alone, a deterministic solver acting alone, and a hybrid in which the solver constructs the legal candidate set while an LLM ranks or selects among candidates. The goal is to separate constraint correctness from strategic ranking and language-model behavior.
@@ -10,7 +21,7 @@ Every Wordle feedback row imposes constraints on the hidden answer. Greens fix l
 
 A robust way to define consistency is behavioral: a candidate is consistent with a history if scoring each prior guess against that candidate reproduces the exact recorded feedback. This definition provides a useful oracle for testing any optimized constraint representation. The assignment requires a deterministic filter, but does not prescribe its internal algorithm. Whatever representation is chosen must correctly capture repeated letters and be auditable against the game engine.
 
-The hybrid condition should not let the LLM invent out-of-set words and call them solver-assisted. The solver owns feasibility; the LLM’s role is ranking or selection among a supplied, deterministic candidate set. Because a 2,300-word list may exceed practical prompt limits, the system must define a reproducible candidate-presentation or ranking interface without using the hidden answer. Comparisons must use the same fixed benchmark, environment, vocabularies, and game budget.
+The hybrid condition should not let the LLM invent out-of-set words and call them solver-assisted. The solver owns feasibility; the LLM’s role is ranking or selection among a supplied, deterministic candidate set. Because a full-size answer list may exceed practical prompt limits, the system must define a reproducible candidate-presentation or ranking interface without using the hidden answer. Comparisons must use the same fixed benchmark, environment, vocabularies, and game budget.
 
 ## Exact Requirements
 

@@ -1,5 +1,16 @@
 # Problem 06 — Supervised Fine-Tuning with LoRA
 
+## Module context
+
+Test whether a 0.2B–0.5B model can internalize Wordle behavior from
+solver-generated data — and distinguish imitation from memorization with
+held-out and challenge splits. Start with LoRA; it is cheap and iterable.
+
+- Hints: `hints/06_finetuning.md`
+- Theory: `theory/05_training_and_sft.md`, `theory/02_local_llms.md`
+- Reference solution: `solutions/06_finetuning/`
+- Maintained library: `src/training/sft.py` (needs `requirements-ml.txt`)
+
 ## Objective
 
 Develop a reproducible supervised fine-tuning pipeline that teaches a pretrained language model to select strong next guesses from structured game states. Use the dataset produced by an entropy-based expert, preserve a strict **80/10/10 train/validation/test partition**, and train with Low-Rank Adaptation (LoRA) or a clearly justified parameter-efficient variant. The system must support fair evaluation of four policies: **Base**, **Prompted**, **SFT**, and **SFT+Search**.

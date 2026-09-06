@@ -1,5 +1,16 @@
 # Problem 07 — Inference-Time Scaling and Compute–Quality Tradeoffs
 
+## Module context
+
+Weights are only one source of capability: proposals, verifiers, and search
+buy performance with test-time compute. Plot the compute–performance frontier
+and attribute gains to diversity, filtering, verification, and search
+separately.
+
+- Hints: `hints/07_scaling.md`
+- Theory: `theory/04_search_and_solver.md`, `theory/02_local_llms.md`
+- Reference solution: `solutions/07_scaling/`
+
 ## Objective
 
 Implement and compare multiple inference-time scaling methods for a state-to-next-guess policy, then quantify the tradeoff between additional computation and game performance. Your final result must include a **Pareto curve of inference compute versus win rate** and enough accounting detail to explain every point on that curve. At minimum, study direct decoding, repeated sampling, candidate reranking, and an explicit search method. The comparison must reveal whether more compute is being used productively rather than merely producing more text.
