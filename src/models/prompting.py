@@ -6,7 +6,7 @@ from collections.abc import Sequence
 
 from src.environment.state import GuessRecord
 
-WORD_RE = re.compile(r"\b[a-zA-Z]{5}\b")
+WORD_RE = re.compile(r"\b[a-zA-Z]+\b")
 
 
 def render_history(history: Sequence[GuessRecord]) -> str:
@@ -16,6 +16,14 @@ def render_history(history: Sequence[GuessRecord]) -> str:
     return "\n".join(f"{i + 1}. {x.guess.upper()} -> {x.feedback}" for i, x in enumerate(history))
 
 
+def _prompt_length(history: Sequence[GuessRecord], candidates: Sequence[str] | None) -> int:
+    if history:
+        return len(history[0].guess)
+    if candidates:
+        return len(candidates[0])
+    return 5
+
+
 def build_prompt(
     history: Sequence[GuessRecord],
     *,
@@ -23,6 +31,7 @@ def build_prompt(
     request_reasoning: bool = False,
 ) -> str:
     """Build a compact instruction prompt with an output contract."""
+    width = _prompt_length(history, candidates)
     candidate_text = ""
     if candidates is not None:
         visible = ", ".join(w.upper() for w in candidates[:200])
@@ -32,19 +41,23 @@ def build_prompt(
         if request_reasoning else ""
     )
     return (
-        "You are selecting the next legal five-letter Wordle guess. Feedback uses G=correct "
+        f"You are selecting the next legal {width}-letter Wordle guess. Feedback uses G=correct "
         "position, Y=present elsewhere, B=absent after duplicate-letter accounting.\n"
         f"History:\n{render_history(history)}{candidate_text}\n"
         f"{reasoning}finish with exactly: GUESS: WORD"
     )
 
 
-def extract_guess(text: str, allowed: set[str] | None = None) -> str | None:
-    """Extract the first explicit/legal five-letter guess from model text."""
-    explicit = re.search(r"GUESS\s*:\s*([A-Za-z]{5})\b", text, re.IGNORECASE)
+def extract_guess(
+    text: str, allowed: set[str] | None = None, length: int = 5
+) -> str | None:
+    """Extract the first explicit/legal guess of the expected length."""
+    explicit = re.search(rf"GUESS\s*:\s*([A-Za-z]{{{length}}})\b", text, re.IGNORECASE)
     words = ([explicit.group(1)] if explicit else []) + WORD_RE.findall(text)
     for word in words:
         word = word.lower()
+        if len(word) != length:
+            continue
         if allowed is None or word in allowed:
             return word
     return None

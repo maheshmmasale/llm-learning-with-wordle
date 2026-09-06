@@ -23,12 +23,13 @@ Wordle asks a player to identify a hidden five-letter answer in at most six gues
 
 The environment will later be used for controlled comparisons among prompting strategies, language models, and deterministic solvers. Small ambiguities can invalidate those comparisons. For example, a hidden answer accidentally included in serialized state would create target leakage; nondeterministic answer selection would make paired experiments incomparable; inconsistent word-list normalization could change the denominator of a reported win rate. Treat the environment as a compact benchmark package, not as a demo script.
 
-Use two distinct vocabularies: the shipped `data/guesses.txt` (553 words) and
-`data/answers.txt` (65 words), curated common English words. Every answer must
-be a valid guess; most valid guesses need not be answers. The lists are small
-on purpose — the official full-size lists are copyrighted and cannot be
-redistributed — and `src/environment/vocab.py` accepts licensed replacements
-with no code changes. Document the normalization policy and report the
+Use two distinct vocabularies: the shipped `data/guesses.txt` (8,506 words) and
+`data/answers.txt` (65 curated common words) and `data/guesses.txt` (8,506
+words from the BSD system dictionary). Every answer must be a valid guess;
+most valid guesses need not be answers. Answers stay small and common on
+purpose — the official ~2,300-word list is copyrighted — while guesses are
+full-scale so solving is realistic. `src/environment/vocab.py` accepts
+licensed replacements with no code changes. Document the normalization policy and report the
 effective counts from the loader, not from the file headers.
 
 ## Exact Requirements
@@ -42,7 +43,11 @@ effective counts from the loader, not from the file headers.
    accepted guesses, and returns a structured turn with the five feedback
    symbols. Game status is read from `won`/`done`; the public observation
    (`observe()`) must never contain the target.
-3. Enforce five-letter normalized words and reject guesses not in the valid list. Define whether normalization accepts uppercase input and surrounding whitespace. Invalid guesses must not consume an attempt unless the specification explicitly justifies a different choice.
+3. Enforce normalized words of the list's length (five by default; the engine
+   supports any length — see `data/answers6.txt`, `data/answers7.txt`) and
+   reject guesses not in the valid list. Define whether normalization accepts
+   uppercase input and surrounding whitespace. Invalid guesses must not consume
+   an attempt unless the specification explicitly justifies a different choice.
 4. Implement exact feedback using a two-stage allocation rule: correct-position matches must be accounted for before misplaced matches, and no answer-letter occurrence may be allocated more than once. Cover cases where the answer repeats a letter, the guess repeats a letter, or both do.
 5. Use the machine-readable `B`/`Y`/`G` feedback codes (`src/environment/wordle.py:
    `Mark`, `feedback_code`) as the canonical representation and document their
@@ -64,7 +69,7 @@ effective counts from the loader, not from the file headers.
 - A fixed seed produces the same 1,000-game answer sequence and identical feedback for identical guesses.
 - Invalid words, malformed inputs, and post-terminal guesses behave consistently and do not corrupt state.
 - Public observations and standard object representations do not reveal the target during an active game.
-- Vocabulary validation passes on the shipped lists (65 answers, 553 guesses),
+- Vocabulary validation passes on the shipped lists (65 answers, 8,506 guesses),
   with the precise loader-reported counts recorded.
 - The game ends after a correct guess or six accepted guesses by default, and status fields remain internally consistent.
 - The implementation can be imported and driven programmatically without interactive prompts.

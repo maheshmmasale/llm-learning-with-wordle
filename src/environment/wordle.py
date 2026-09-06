@@ -23,10 +23,10 @@ def score_guess(target: str, guess: str) -> Feedback:
     E can never award two yellow/green marks.
     """
     target, guess = target.lower(), guess.lower()
-    if len(target) != 5 or len(guess) != 5 or not target.isalpha() or not guess.isalpha():
-        raise ValueError("target and guess must be five alphabetic characters")
+    if not target.isalpha() or not guess.isalpha() or len(target) != len(guess):
+        raise ValueError("target and guess must be same-length alphabetic words")
 
-    result = [Mark.ABSENT] * 5
+    result = [Mark.ABSENT] * len(target)
     remaining: dict[str, int] = {}
     for i, (t, g) in enumerate(zip(target, guess)):
         if t == g:
@@ -62,7 +62,14 @@ class WordleEnv:
 
     def __init__(self, target: str, allowed_guesses: Iterable[str], max_turns: int = 6):
         target = target.lower()
-        self.allowed_guesses = {w.strip().lower() for w in allowed_guesses if len(w.strip()) == 5}
+        if not target.isalpha():
+            raise ValueError("target must be alphabetic")
+        self.word_length = len(target)
+        self.allowed_guesses = {
+            w.strip().lower()
+            for w in allowed_guesses
+            if len(w.strip()) == self.word_length
+        }
         if target not in self.allowed_guesses:
             raise ValueError("target must be in allowed_guesses")
         self._target = target

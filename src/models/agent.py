@@ -44,7 +44,7 @@ def llm_policy_factory(
                 prompt, max_new_tokens=max_new_tokens, temperature=temperature,
                 do_sample=temperature > 0,
             )
-            guess = extract_guess(text, allowed)
+            guess = extract_guess(text, allowed, len(answers[0]))
             if guess is not None and guess not in {t.guess for t in history}:
                 return guess
             used = {t.guess for t in history}

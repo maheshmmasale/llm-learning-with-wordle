@@ -50,7 +50,9 @@ Full docs: see PROBLEM.md, curriculum/, problems/
 src/            Maintained library: environment, evaluation, models,
                 search, training, utils (tested by tests/).
 tests/          Pytest suite for src/ plus the milestone-01 tests.
-data/           Shipped word lists: answers.txt (65) + guesses.txt (553).
+data/           Shipped word lists: 5-letter (65 answers + 8,506 guesses),
+                plus 6-letter (40 + 15,073) and 7-letter (48 + 20,562) sets.
+                Engine is length-agnostic; longer words, same rules.
                 Curated common words; swap in licensed full-size lists
                 without code changes.
 solutions/      Frozen per-milestone reference snapshots. Self-contained

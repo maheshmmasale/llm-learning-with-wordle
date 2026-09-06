@@ -13,8 +13,8 @@ class GuessRecord:
     feedback: str
 
     def __post_init__(self) -> None:
-        if len(self.guess) != 5 or len(self.feedback) != 5:
-            raise ValueError("guess and feedback must have length five")
+        if len(self.guess) != len(self.feedback):
+            raise ValueError("guess and feedback must have equal length")
         if any(c not in "BYG" for c in self.feedback):
             raise ValueError("feedback must use only B, Y, G")
 

@@ -34,6 +34,33 @@ def test_score_guess_case_insensitive():
     assert feedback_code(score_guess("APPLE", "apple")) == "GGGGG"
 
 
+@pytest.mark.parametrize(
+    ("target", "guess", "expected"),
+    [
+        ("planet", "planet", "GGGGGG"),
+        ("banana", "bandana"[:6], "GGGBYY"),
+        ("captain", "captain", "GGGGGGG"),
+        ("blanket", "blinker", "GGBGGGB"),
+    ],
+)
+def test_score_guess_other_lengths(target, guess, expected):
+    assert feedback_code(score_guess(target, guess)) == expected
+
+
+def test_score_guess_rejects_mismatched_lengths():
+    with pytest.raises(ValueError):
+        score_guess("apple", "planets")
+
+
+def test_env_other_length():
+    env = WordleEnv("planet", ["planet", "garden", "coffee"])
+    assert env.word_length == 6
+    env.step("garden")
+    turn = env.step("planet")
+    assert turn.feedback == (Mark.CORRECT,) * 6
+    assert env.won
+
+
 def test_feedback_code_accepts_marks_and_strings():
     assert feedback_code([Mark.CORRECT, "Y", Mark.ABSENT, "B", "G"]) == "GYBBG"
 
