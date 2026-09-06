@@ -1,5 +1,32 @@
 # Papers and Core Resources
 
+## The 20 papers: read the brief first
+
+Each file below fits on one screen: what the paper shows, the concepts it
+needs, why it matters for this course, plus paper and video links. In a
+hurry, the brief alone suffices; curious, follow the links.
+
+Foundations: [01 Attention](01_attention-is-all-you-need.md) ·
+[02 BERT](02_bert.md) · [03 GPT-2](03_gpt2.md) · [04 GPT-3](04_gpt3.md) ·
+[05 SentencePiece](05_sentencepiece.md)
+
+Scale: [06 Scaling Laws](06_scaling-laws.md) ·
+[07 Chinchilla](07_chinchilla.md) · [08 LLaMA](08_llama.md)
+
+Training: [09 LoRA](09_lora.md) · [10 QLoRA](10_qlora.md) ·
+[11 InstructGPT](11_instructgpt.md) · [12 PPO](12_ppo.md) ·
+[13 DPO](13_dpo.md) · [14 GRPO/DeepSeekMath](14_grpo-deepseekmath.md)
+
+Data: [15 Self-Instruct](15_self-instruct.md) ·
+[16 Data Cards](16_data-cards.md)
+
+Reasoning at inference: [17 Chain-of-Thought](17_chain-of-thought.md) ·
+[18 Self-Consistency](18_self-consistency.md) ·
+[19 Tree of Thoughts](19_tree-of-thoughts.md) ·
+[20 Verify Step by Step](20_verify-step-by-step.md)
+
+---
+
 A curated path from transformer fundamentals to the research questions in this project. Each item includes **why it matters** for a small-model Wordle system. Do not try to read everything at once: use the **Start here** items first, then read the papers relevant to the experiment you are running.
 
 > Links were checked when this repository was prepared in August 2026. Papers may later receive revised versions; record the version you used in your experiment notes.
