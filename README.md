@@ -23,7 +23,7 @@ python -m src.evaluation.benchmark --policy solver --limit 50 --seed 0
 ```
 
 Every command above is verified in local runs: 62 tests pass. The solver
-reference scores 87.4% over all 2,200 answers in ~1 min — beating it is the
+reference scores 88.4% over all 2,315 answers in ~1 min — beating it is the
 game. For model
 milestones (data generation, SFT, inference scaling):
 
@@ -51,9 +51,10 @@ Full docs: see PROBLEM.md, curriculum/, problems/
 src/            Maintained library: environment, evaluation, models,
                 search, training, utils (tested by tests/).
 tests/          Pytest suite for src/ plus the milestone-01 tests.
-data/           Word lists for lengths 5-9: 2,200 frequency-ranked answers
-                each; guesses 8,506 / 15,073 / 20,562 / 26,446 / 28,841.
-                Turns default to word length; engine is length-agnostic.
+data/           Length 5: original 2,315 answers + 12,972 legal guesses.
+                Lengths 6-9: 2,200 frequency-ranked answers each; guesses
+                15,073 / 20,562 / 26,446 / 28,841. Turns default to word
+                length; engine is length-agnostic.
                 Curated common words; swap in licensed full-size lists
                 without code changes.
 solutions/      Frozen per-milestone reference snapshots. Self-contained

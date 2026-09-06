@@ -42,7 +42,7 @@ def test_shipped_data_lists_validate():
 @pytest.mark.parametrize(
     ("answers_file", "guesses_file", "length", "min_answers"),
     [
-        ("answers.txt", "guesses.txt", 5, 50),
+        ("answers.txt", "guesses.txt", 5, 2000),
         ("answers6.txt", "guesses6.txt", 6, 30),
         ("answers7.txt", "guesses7.txt", 7, 30),
     ],

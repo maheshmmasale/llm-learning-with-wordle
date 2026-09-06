@@ -24,15 +24,13 @@ guesses (one turn per letter; longer words get proportionally more turns). After
 
 The environment will later be used for controlled comparisons among prompting strategies, language models, and deterministic solvers. Small ambiguities can invalidate those comparisons. For example, a hidden answer accidentally included in serialized state would create target leakage; nondeterministic answer selection would make paired experiments incomparable; inconsistent word-list normalization could change the denominator of a reported win rate. Treat the environment as a compact benchmark package, not as a demo script.
 
-Use two distinct vocabularies: the shipped `data/guesses.txt` (8,506 words) and
-`data/answers.txt` (2,200 frequency-ranked common words) and
-`data/guesses.txt` (8,506 words from the BSD system dictionary), with
-matching pairs for 6–9 letters (`data/answers6.txt`, …). Every answer must
-be a valid guess; most valid guesses need not be answers. Frequency-ranked
-answers replace the official list, which is copyrighted and cannot be
-redistributed. `src/environment/vocab.py` accepts licensed replacements
-with no code changes. Document the normalization policy and report the
-effective counts from the loader, not from the file headers.
+Use two distinct vocabularies: at length 5, the original daily-answer set
+(`data/answers.txt`, 2,315 words) and the full legal-guess list
+(`data/guesses.txt`, 12,972 words), with matching pairs for 6–9 letters
+(`data/answers6.txt`, …; frequency-ranked answers over BSD-dictionary
+guesses there). Every answer must be a valid guess; most valid guesses need
+not be answers. Document the normalization policy and report the effective
+counts from the loader, not from the file headers.
 
 ## Exact Requirements
 
@@ -71,7 +69,7 @@ effective counts from the loader, not from the file headers.
 - A fixed seed produces the same 1,000-game answer sequence and identical feedback for identical guesses.
 - Invalid words, malformed inputs, and post-terminal guesses behave consistently and do not corrupt state.
 - Public observations and standard object representations do not reveal the target during an active game.
-- Vocabulary validation passes on the shipped lists (2,200 answers and 8,506 guesses at length 5),
+- Vocabulary validation passes on the shipped lists (2,315 answers and 12,972 guesses at length 5),
   with the precise loader-reported counts recorded.
 - The game ends after a correct guess or the turn budget (word length by default), and status fields remain internally consistent.
 - The implementation can be imported and driven programmatically without interactive prompts.

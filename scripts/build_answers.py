@@ -1,4 +1,4 @@
-"""Rebuild data/answers*.txt from word frequency ranks.
+"""Rebuild data/answers{6,7,8,9}.txt from word frequency ranks.
 
 Answers are the most frequent English words per length that also appear in
 the BSD-dictionary guesses lists, so every answer is a legal guess::
@@ -6,7 +6,9 @@ the BSD-dictionary guesses lists, so every answer is a legal guess::
     pip install wordfreq
     python scripts/build_answers.py --per-length 2200
 
-Requires network on first run (wordfreq downloads its data once).
+Length 5 is skipped: data/answers.txt ships the original 2,315-word
+daily-answer set directly. Requires network on first run (wordfreq
+downloads its data once).
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-NAMES = {5: "answers.txt", 6: "answers6.txt", 7: "answers7.txt",
+NAMES = {6: "answers6.txt", 7: "answers7.txt",
          8: "answers8.txt", 9: "answers9.txt"}
 
 
