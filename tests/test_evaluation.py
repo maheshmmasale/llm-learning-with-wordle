@@ -59,6 +59,22 @@ def test_benchmark_deterministic_and_writes_json(tmp_path):
     assert not list(tmp_path.glob("*.tmp"))
 
 
+def test_cli_main_reads_config_and_explicit_flags_win(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    out = tmp_path / "r.json"
+    report = main(
+        [
+            "--config", "experiments/configs/base.yaml",
+            "--limit", "5",
+            "--seed", "0",
+            "--output", str(out),
+        ]
+    )
+    assert report["metrics"]["games"] == 5
+    assert out.is_file()
+    assert (root / "experiments/configs/base.yaml").is_file()
+
+
 def test_cli_main_runs_on_shipped_data():
     report = main(
         [

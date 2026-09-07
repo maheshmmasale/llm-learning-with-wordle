@@ -26,7 +26,7 @@ A deliberately short list of high-signal lectures and code-alongs. The list is o
 
 13. **[Stanford CME295: Transformers & Large Language Models](https://www.youtube.com/watch?v=Q5baLehv5So)** — Covers decoding, temperature, beam search, chain of thought, self-consistency, KV caching, and PagedAttention in one coherent lecture.
 14. **[Stanford CME295: LLM Training](https://www.youtube.com/watch?v=VlA_jt_3Qc4)** — Surveys pretraining compute, Chinchilla scaling, ZeRO, FlashAttention, mixed precision, SFT, LoRA, and QLoRA.
-15. **[Stanford CME295: LLM Reasoning](https://www.youtube.com/watch?v=k5Fh-UgTuCo)** — Reviews reasoning-model evaluation, pass@k, test-time scaling, GRPO/PPO, and length bias; best treated as an advanced Week 7 resource.
+15. **[Stanford CME295: LLM Reasoning](https://www.youtube.com/watch?v=k5Fh-UgTuCo)** — Reviews reasoning-model evaluation, pass@k, test-time scaling, GRPO/PPO, and length bias; best treated as an advanced inference-scaling resource.
 16. **[Stanford CS25: Emergent Abilities and Scaling in LLMs — Jason Wei](https://www.youtube.com/watch?v=tVtOevLrt5U)** — Presents scaling behavior and prompts questions about whether observed capability jumps depend on metrics or model size.
 
 ## Optional reinforcement learning and broader perspective
@@ -44,15 +44,15 @@ For each video, write no more than five bullets:
 - What metric would reveal whether it helped?
 - What could confound that conclusion?
 
-## Suggested weekly viewing
+## Suggested viewing order
 
-| Week | Videos |
-|---:|---|
-| 1 | 6 |
-| 2 | 1–5, 7 |
-| 3 | 11, 16 |
-| 4 | 13 |
-| 5 | 2, 9 |
-| 6 | 8, 10, 12, 14 |
-| 7 | 15, 17 |
-| 8 | 18 and revisit the videos directly cited in the final report |
+| Milestone | Videos |
+|---|---|
+| M1 environment | 6 |
+| M2 baselines | 1–5, 7 |
+| M3 prompting | 11, 16 |
+| M4 solver | 13 |
+| M5 dataset | 2, 9 |
+| M6 finetuning | 8, 10, 12, 14 |
+| M7 scaling | 15, 17 |
+| M8 final | 18 and revisit the videos directly cited in the final report |

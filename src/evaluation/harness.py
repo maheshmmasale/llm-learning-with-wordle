@@ -89,21 +89,31 @@ def sample_schedule(answers: Sequence[str], games: int, seed: int) -> list[str]:
 
 def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
     parser = argparse.ArgumentParser(description="Grade an LLM at Wordle.")
+    parser.add_argument("--config", default=None,
+                        help="YAML config; explicit flags override it")
     parser.add_argument("--model", default=None,
                         help="HF model id or local path (needs torch)")
     parser.add_argument("--policy", choices=("random", "solver", "entropy"),
                         default="solver", help="non-LLM smoke policies")
-    parser.add_argument("--answers", default="data/answers.txt")
-    parser.add_argument("--guesses", default="data/guesses.txt")
-    parser.add_argument("--games", type=int, default=1000)
-    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--answers", default=None)
+    parser.add_argument("--guesses", default=None)
+    parser.add_argument("--games", type=int, default=None)
+    parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--max-turns", type=int, default=None,
                         help="default: one turn per letter")
     parser.add_argument("--output", default=None)
     args = parser.parse_args(argv)
+    from src.evaluation.benchmark import _config_section, _resolve
 
-    answers = load_words(args.answers)
-    guesses = load_words(args.guesses)
+    data, evaluation, experiment = _config_section(args)
+    answers_path = _resolve(args.answers or data.get("answers", "data/answers.txt"))
+    guesses_path = _resolve(args.guesses or data.get("allowed_guesses", "data/guesses.txt"))
+    games = args.games if args.games is not None else data.get("max_games", 1000)
+    seed = args.seed if args.seed is not None else experiment.get("seed", 0)
+    max_turns = args.max_turns if args.max_turns is not None else evaluation.get("max_turns")
+
+    answers = load_words(answers_path)
+    guesses = load_words(guesses_path)
     if args.model is not None:
         from src.models.agent import llm_policy_factory
 
@@ -112,18 +122,25 @@ def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
     else:
         label = f"{args.policy} (smoke, not a model)"
         if args.policy == "random":
-            factory = random_policy_factory(args.seed)
+            factory = random_policy_factory(seed)
         elif args.policy == "solver":
             factory = solver_policy_factory(answers)
         else:
             factory = entropy_policy_factory(answers, guesses)
 
     summary = run_harness(
-        sample_schedule(answers, args.games, args.seed),
-        guesses, factory, max_turns=args.max_turns,
+        sample_schedule(answers, games, seed),
+        guesses, factory, max_turns=max_turns,
     )
-    if args.output is not None:
-        Path(args.output).write_text(json.dumps(summary, indent=2) + "\n")
+    output = args.output
+    if output is None and (args.config is not None or args.model is not None):
+        outdir = experiment.get("output_dir", "experiments/results")
+        name = experiment.get("name", args.model or args.policy)
+        output = str(Path(_resolve(outdir)) / f"{name}-s{seed}.json")
+    if output is not None:
+        destination = Path(output)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(json.dumps(summary, indent=2) + "\n")
 
     def fmt(seconds: float | None) -> str:
         return f"{seconds:.3f}s" if seconds is not None else "n/a"

@@ -24,6 +24,7 @@ from src.environment.vocab import load_words, split_vocabulary
 from src.environment.wordle import WordleEnv, feedback_code
 from src.search.ranker import rank_guesses
 from src.search.solver import ConstraintSolver
+from src.utils.config import load_config
 
 try:
     from .metrics import GameResult, summarize
@@ -75,6 +76,7 @@ def run_benchmark(
     seed: int = 0,
     limit: int | None = None,
     output: str | Path | None = None,
+    max_turns: int | None = None,
 ) -> dict[str, Any]:
     """Evaluate a fresh policy per game and optionally atomically write JSON."""
     ordered = list(targets)
@@ -82,7 +84,10 @@ def run_benchmark(
     if limit is not None:
         ordered = ordered[:limit]
     allowed = set(allowed_guesses)
-    results = [play_game(target, allowed, policy_factory()) for target in ordered]
+    results = [
+        play_game(target, allowed, policy_factory(), max_turns=max_turns)
+        for target in ordered
+    ]
     report = {"seed": seed, "targets": len(ordered), "metrics": summarize(results)}
     if output is not None:
         destination = Path(output)
@@ -154,35 +159,63 @@ def entropy_policy_factory(
 POLICIES = ("random", "solver", "entropy")
 
 
+def _config_section(args: argparse.Namespace) -> tuple[dict, dict, dict]:
+    if args.config is None:
+        return {}, {}, {}
+    root = Path(__file__).resolve().parents[2]
+    cfg = load_config(args.config if Path(args.config).is_absolute() else root / args.config)
+    return cfg.get("data", {}), cfg.get("evaluation", {}), cfg.get("experiment", {})
+
+
+def _resolve(path: str) -> str:
+    candidate = Path(path)
+    if candidate.is_absolute():
+        return path
+    return str(Path(__file__).resolve().parents[2] / candidate)
+
+
 def main(argv: Sequence[str] | None = None) -> dict[str, Any]:
     """CLI entry point: run the benchmark and print aggregate metrics."""
     parser = argparse.ArgumentParser(description="Benchmark Wordle policies.")
-    parser.add_argument("--answers", default="data/answers.txt")
-    parser.add_argument("--guesses", default="data/guesses.txt")
+    parser.add_argument("--config", default=None,
+                        help="YAML config; explicit flags override it")
+    parser.add_argument("--answers", default=None)
+    parser.add_argument("--guesses", default=None)
     parser.add_argument("--policy", choices=POLICIES, default="solver")
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--max-turns", type=int, default=None,
                         help="default: one turn per letter")
     parser.add_argument("--output", default=None)
     args = parser.parse_args(argv)
+    data, evaluation, experiment = _config_section(args)
 
+    answers_path = _resolve(args.answers or data.get("answers", "data/answers.txt"))
+    guesses_path = _resolve(args.guesses or data.get("allowed_guesses", "data/guesses.txt"))
+    seed = args.seed if args.seed is not None else experiment.get("seed", 0)
+    max_turns = args.max_turns if args.max_turns is not None else evaluation.get("max_turns")
     answers, guesses = split_vocabulary(
-        load_words(args.answers), load_words(args.guesses)
+        load_words(answers_path), load_words(guesses_path)
     )
     if args.policy == "random":
-        factory = random_policy_factory(args.seed)
+        factory = random_policy_factory(seed)
     elif args.policy == "solver":
         factory = solver_policy_factory(answers)
     else:
         factory = entropy_policy_factory(answers, guesses)
+    output = args.output
+    if output is None and args.config is not None:
+        outdir = experiment.get("output_dir", "experiments/results")
+        name = experiment.get("name", args.policy)
+        output = str(Path(_resolve(outdir)) / f"{name}-s{seed}.json")
     report = run_benchmark(
         answers,
         guesses,
         factory,
-        seed=args.seed,
+        seed=seed,
         limit=args.limit,
-        output=args.output,
+        output=output,
+        max_turns=max_turns,
     )
     metrics = report["metrics"]
     print(f"policy   : {args.policy}")

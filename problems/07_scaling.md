@@ -7,7 +7,6 @@ buy performance with test-time compute. Plot the compute–performance frontier
 and attribute gains to diversity, filtering, verification, and search
 separately.
 
-- Hints: `hints/07_scaling.md`
 - Theory: `theory/04_search_and_solver.md`, `theory/02_local_llms.md`
 - Reference solution: `solutions/07_scaling/`
 

@@ -6,7 +6,6 @@ Test whether a 0.2B–0.5B model can internalize Wordle behavior from
 solver-generated data — and distinguish imitation from memorization with
 held-out and challenge splits. Start with LoRA; it is cheap and iterable.
 
-- Hints: `hints/06_finetuning.md`
 - Theory: `theory/05_training_and_sft.md`, `theory/02_local_llms.md`
 - Reference solution: `solutions/06_finetuning/`
 - Maintained library: `src/training/sft.py` (needs `requirements-ml.txt`)

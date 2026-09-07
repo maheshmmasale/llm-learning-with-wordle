@@ -6,7 +6,6 @@ Integrate everything under fixed budgets with a comparison against targets you w
 A credible negative result with rigorous ablations beats a high score from
 leakage or undocumented tuning.
 
-- Hints: `hints/08_final.md`
 - Theory: `theory/01_ablations.md`, `theory/06_evaluation_and_statistics.md`
 - Reference solution: `solutions/08_final/`
 - Report checklist: `reports/final_report_template.md`

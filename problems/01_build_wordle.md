@@ -7,7 +7,6 @@ exact, reproducible, and independently testable. Treat it as scientific
 infrastructure, not game code: a flawed evaluator can reward illegal
 behavior, leak the answer, or make later results untrustworthy.
 
-- Hints: `hints/01_environment.md` (open a level only when blocked)
 - Theory: `theory/01_ablations.md`, `theory/06_evaluation_and_statistics.md`
 - Reference solution: `solutions/01_environment/`
 - Maintained library: `src/environment/` (tested by `tests/test_environment.py`,

@@ -6,7 +6,7 @@
 
 ## 1. Context
 
-This project is designed as an eight-week research apprenticeship for a third-year computer engineering student preparing for machine-learning engineering or research roles at a frontier AI laboratory. The student is expected to have introductory exposure to Python, PyTorch, deep learning, transformer language models, and model training, but no Wordle-specific knowledge is assumed.
+This project is designed as a self-paced research project for a computer engineering student preparing for machine-learning engineering or research roles at a frontier AI laboratory. The student is expected to have introductory exposure to Python, PyTorch, deep learning, transformer language models, and model training, but no Wordle-specific knowledge is assumed.
 
 The project must demonstrate more than the ability to call a pretrained model or fine-tune on a convenient dataset. The student is expected to show that they can:
 

@@ -10,8 +10,8 @@ model:
   device_map: auto
   trust_remote_code: false
 data:
-  answers: data/wordle/answers.txt
-  allowed_guesses: data/wordle/allowed.txt
+  answers: data/answers.txt
+  allowed_guesses: data/guesses.txt
   split: test
   max_games: 1000
 generation:
@@ -25,7 +25,7 @@ prompt:
   include_candidates: false
   request_reasoning: false
 evaluation:
-  max_turns: 6
+  max_turns: null  # null = one turn per letter
   reject_invalid: true
   count_invalid_as_turn: true
   save_per_game: true

@@ -2,6 +2,7 @@
 
 import json
 import logging
+from pathlib import Path
 
 import pytest
 import yaml
@@ -41,3 +42,14 @@ def test_run_dir_and_json_log(tmp_path):
 
 def test_configure_logging_returns_logger():
     assert isinstance(configure_logging("WARNING"), logging.Logger)
+
+
+def test_experiment_configs_load_and_point_at_real_data():
+    root = Path(__file__).resolve().parents[1]
+    for name in ("base.yaml", "sft.yaml", "inference.yaml"):
+        config = load_config(root / "experiments/configs" / name)
+        assert isinstance(config, dict)
+    for name in ("base.yaml", "inference.yaml"):
+        data = load_config(root / "experiments/configs" / name)["data"]
+        assert (root / data["answers"]).is_file()
+        assert (root / data["allowed_guesses"]).is_file()

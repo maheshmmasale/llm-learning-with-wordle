@@ -9,8 +9,8 @@ model:
   dtype: auto
   device_map: auto
 data:
-  answers: data/wordle/answers.txt
-  allowed_guesses: data/wordle/allowed.txt
+  answers: data/answers.txt
+  allowed_guesses: data/guesses.txt
   split: test
   max_games: 1000
 solver:
@@ -33,7 +33,7 @@ beam:
   expansion_top_k: 20
   objective: expected_remaining
 evaluation:
-  max_turns: 6
+  max_turns: null  # null = one turn per letter
   fixed_target_order: true
   count_invalid_as_turn: true
   track_generated_tokens: true

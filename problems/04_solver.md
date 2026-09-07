@@ -6,7 +6,6 @@ A model may know useful word statistics while failing at exact bookkeeping.
 Separate the two: the solver owns feasibility, the model ranks or selects.
 This decomposition also tells you what the model actually contributes.
 
-- Hints: `hints/04_solver.md`
 - Theory: `theory/04_search_and_solver.md`
 - Reference solution: `solutions/04_solver/`
 - Maintained library: `src/search/` (tested by `tests/test_search.py`)

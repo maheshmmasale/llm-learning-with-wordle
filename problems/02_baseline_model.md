@@ -7,7 +7,6 @@ a lucky first guess, answer leakage, or extra inference calls. Build the
 comparison ladder — random, heuristic, base model, prompted model, strong
 reference — before trying to improve anything.
 
-- Hints: `hints/02_baseline.md`
 - Theory: `theory/01_ablations.md`, `theory/06_evaluation_and_statistics.md`
 - Reference solution: `solutions/02_baseline/`
 - Maintained library: `src/evaluation/` (run it now:

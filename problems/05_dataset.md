@@ -7,7 +7,6 @@ openings, not state-dependent decisions. Treat dataset construction as an
 experiment — define the teacher, diversify states, preserve provenance, and
 prevent leakage.
 
-- Hints: `hints/05_dataset.md`
 - Theory: `theory/05_training_and_sft.md`
 - Reference solution: `solutions/05_dataset/`
 - Maintained library: `src/training/dataset.py`

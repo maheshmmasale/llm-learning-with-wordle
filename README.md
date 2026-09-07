@@ -4,7 +4,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![Model](https://img.shields.io/badge/model-0.2--0.5B-yellow)](https://huggingface.co/)
-[![Project](https://img.shields.io/badge/project-8%20weeks-6f42c1)](#eight-week-roadmap)
+[![Pace](https://img.shields.io/badge/pace-self--paced-6f42c1)](#)
 
 This is `llm-learning-with-wordle` - a research-apprenticeship style teaching repository for engineering students who want to work at frontier AI labs.
 
@@ -62,7 +62,6 @@ solutions/      Frozen per-milestone reference snapshots. Self-contained
                 src/ is canonical for new work; solutions/ show one
                 working answer per milestone.
 problems/       The 8 milestone assignments (start here).
-hints/          Leveled hints, one file per milestone.
 theory/         Concept notes behind the experiments.
 papers/ videos/ tutorials/   Curated external reading/watching.
 experiments/    Configs; results/ defines the per-run record layout.

@@ -7,7 +7,6 @@ much capability is already present before touching weights. Design prompt
 families and compare them as ablations — producing plausible language is not
 the same as tracking exact constraints.
 
-- Hints: `hints/03_prompting.md`
 - Theory: `theory/03_prompting_and_representation.md`
 - Reference solution: `solutions/03_prompting/`
 - Maintained library: `src/models/prompting.py`

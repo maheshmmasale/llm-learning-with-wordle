@@ -36,6 +36,22 @@ def test_trajectories_record_every_attempt():
     assert all(set(t) == {"attempt", "guess", "feedback"} for t in lost["turns"])
 
 
+def test_harness_main_reads_config(tmp_path):
+    from src.evaluation.harness import main
+
+    out = tmp_path / "h.json"
+    summary = main(
+        [
+            "--config", "experiments/configs/base.yaml",
+            "--games", "5",
+            "--seed", "0",
+            "--output", str(out),
+        ]
+    )
+    assert summary["games"] == 5
+    assert out.is_file()
+
+
 def test_schedule_is_deterministic_and_sized():
     first = sample_schedule(ANSWERS, 1000, seed=0)
     assert first == sample_schedule(ANSWERS, 1000, seed=0)
