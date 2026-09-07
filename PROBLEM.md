@@ -392,9 +392,8 @@ A complete submission includes:
 8. inference-scaling configurations and compute/performance curves;
 9. optional RL implementation and ablations, if attempted;
 10. experiment registry with commit hashes, seeds, hardware, wall-clock time, CPU/GPU-hours, memory, and outcomes;
-11. final system and one-command evaluation instructions;
-12. final research report using `reports/final_report_template.md`; and
-13. the completed autograde scorecard (`python -m src.evaluation.autograde`).
+11. final system and one-command evaluation instructions; and
+12. the completed autograde scorecard (`python -m src.evaluation.autograde`).
 
 Large model weights and datasets should be stored through an appropriate artifact or model repository, not committed directly to Git. Include immutable identifiers and access instructions.
 

@@ -4,7 +4,7 @@ Answers are the most frequent English words per length that also appear in
 the BSD-dictionary guesses lists, so every answer is a legal guess::
 
     pip install wordfreq
-    python scripts/build_answers.py --per-length 2200
+    python src/scripts/build_answers.py --per-length 2200
 
 Length 5 is skipped: data/answers.txt ships the original 2,315-word
 daily-answer set directly. Requires network on first run (wordfreq
@@ -18,7 +18,7 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 NAMES = {6: "answers6.txt", 7: "answers7.txt",
          8: "answers8.txt", 9: "answers9.txt"}
 
@@ -52,7 +52,7 @@ def main() -> None:
         path.write_text(
             f"# Answer list: {len(top)} words, top frequency-ranked English words\n"
             "# (wordfreq SUBTLEX-based) present in the BSD dictionary guesses list.\n"
-            "# Most common first. Regenerate: scripts/build_answers.py\n"
+            "# Most common first. Regenerate: src/scripts/build_answers.py\n"
             + "\n".join(top) + "\n",
             encoding="utf-8",
         )

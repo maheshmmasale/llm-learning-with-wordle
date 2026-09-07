@@ -18,7 +18,7 @@ You start with a public 0.2B-0.5B model (SmolLM-360M, Qwen2-0.5B, TinyLlama) and
 git clone https://github.com/maheshmmasale/llm-learning-with-wordle
 cd llm-learning-with-wordle
 pip install -r requirements.txt
-python -m pytest tests/ solutions/01_environment/
+python -m pytest tests/ src/solutions/01_environment/
 python -m src.evaluation.benchmark --policy solver --limit 50 --seed 0
 ```
 
@@ -57,15 +57,14 @@ data/           Length 5: original 2,315 answers + 12,972 legal guesses.
                 length; engine is length-agnostic.
                 Curated common words; swap in licensed full-size lists
                 without code changes.
-solutions/      Frozen per-milestone reference snapshots. Self-contained
-                (they do not import src/) so each milestone reads alone.
-                src/ is canonical for new work; solutions/ show one
-                working answer per milestone.
+src/            All code: library (environment, evaluation, models,
+                search, training, utils), per-milestone reference
+                snapshots (src/solutions/), and scripts. The library
+                is canonical; snapshots show one working answer each.
 problems/       The 8 milestone assignments (start here).
-theory/         Concept notes behind the experiments.
-papers/ videos/ tutorials/   Curated external reading/watching.
+papers/         20 paper briefs with videos.
+theory/         Concept notes plus video/tutorial link lists.
 experiments/    Configs; results/ defines the per-run record layout.
-reports/        Final-report checklist.
 ```
 
 Follow `problems/01_build_wordle.md` … `problems/08_final_challenge.md` in

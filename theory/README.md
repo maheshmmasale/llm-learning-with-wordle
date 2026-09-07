@@ -28,4 +28,4 @@ The concepts are intentionally connected rather than independent. A structured p
 
 Treat every result as a claim that needs evidence. “The hybrid solver won more games” is incomplete until you state the held-out targets, number of games, random seeds, confidence interval, invalid-word rate, and compute cost. Likewise, “SFT helped” is not established until you compare against the same base model and inference procedure without SFT.
 
-These notes are not substitutes for the papers in [`papers/`](../papers/), the tutorials in [`tutorials/`](../tutorials/), or implementation work. They provide a compact conceptual map so that the repository feels like a research apprenticeship rather than a sequence of disconnected coding tasks.
+These notes are not substitutes for the papers in [`papers/`](../papers/), the [tutorials](tutorials.md) and [videos](videos.md) lists beside them, or implementation work. They provide a compact conceptual map so that the repository feels like a research apprenticeship rather than a sequence of disconnected coding tasks.

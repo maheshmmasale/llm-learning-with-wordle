@@ -1,6 +1,6 @@
 # Answer list: 2200 words, top frequency-ranked English words
 # (wordfreq SUBTLEX-based) present in the BSD dictionary guesses list.
-# Most common first. Regenerate: scripts/build_answers.py
+# Most common first. Regenerate: src/scripts/build_answers.py
 people
 should
 really
